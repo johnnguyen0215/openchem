@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html ng-app="openchemApp" lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>UCI OpenCourseWare - Open Chemistry</title>
+
+	<!-- FOR ANGULAR ROUTING -->
+	<base href="/">
+
+	<!-- CSS  -->
+	<!-- load bootstrap from CDN and custom CSS -->
+
+	<!-- JS -->
+	<!-- load angular and angular-route via CDN -->
+  	<script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
+  	<script src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+	<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.3.8/angular.min.js"></script>
+	<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.3.8/angular-route.js"></script>
+	<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.3.8/angular-animate.js"></script>
+
+	<!-- controllers -->
+	<script src="app/controllers/mainCtrl.js"></script>
+	<script src="app/controllers/userCtrl.js"></script>
+	<script src="app/controllers/adminCtrl.js"></script>
+
+	<!-- services -->
+	<script src="app/services/authService.js"></script>
+	<script src="app/services/userService.js"></script>
+	<script src="app/services/adminService.js"></script>
+	<script src="app/services/searchService.js"></script>
+
+	<!-- main Angular app files -->
+	<script src="app/app.routes.js"></script>
+	<script src="app/app.js"></script>
+
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/2.3.1/css/bootstrap.min.css">
+
+
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/2.3.1/css/bootstrap-theme.min.css">
+
+
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/2.3.1/js/bootstrap.min.js"></script>
+
+	<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css">
+	<link rel="stylesheet" href="assets/css/style.css">
+
+</head>
+<body ng-controller="mainController as main">
+	<div class="container-fluid page-wrap">
+		<div id="header">
+			<div class="logo">
+				<img src="/assets/img/uciocwlogo_horizontal.png">
+			</div>
+			<div ng-if="!main.loggedIn" class="auth">
+				<ul class="nav navbar-nav navbar-right">
+					<li>
+						<a class="homeBtn" href="/">Home</a>
+					</li>
+					<li>
+						<span class="divider">|</span>
+					<li>
+						<a class="signupBtn" href="/signup">Create Account</a>
+					</li>
+					<li>
+						<span class="divider">|</span>
+					</li>
+					<li>
+						<a class="loginBtn" href="/login">Login</a>
+					</li>
+				</ul>
+			</div>
+			<div ng-if="main.loggedIn" class="auth">
+				<ul class="nav navbar-nav navbar-right">
+					<li>
+						<a class="homeBtn" href="/">Home</a>
+					</li>
+					<li>
+						<span class="divider">|</span>
+					</li>
+					<li ng-if="main.isAdmin">
+						<a class="adminBtn" href="/admin">Admin</a>
+					</li>
+					<li ng-if="main.isAdmin">
+						<span class="divider">|</span>
+					</li>
+					<li>
+						<a ng-class="main.logoutClass" ng-click="main.doLogout()" href="/">Log Out</a>
+						<span class="helloUser">Hello {{main.user.username}}</span>
+					</li>
+				</ul>
+			</div>
+		</div>
+
+	<div id="main">
+		<!-- ANGULAR VIEWS -->
+		<div ng-view></div>
+	</div>
+	<div class="site-footer" >
+		<p align="center"><a href="http://uci.edu">UC Irvine</a> | <a href="http://unex.uci.edu/?WT.mc_id=OCWWEB">UC Irvine Extension</a> | <a href="http://www.ocwconsortium.org/">Open Courseware Consortium</a>
+	</div>
+
+</body>
+</html>

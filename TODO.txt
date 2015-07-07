@@ -1,0 +1,4 @@
+TODO List:
+2. Implement Search functionality of lectures with database
+3. Implement adding/removing groups into database
+4. Implement adding/removing of questions and answers into database.

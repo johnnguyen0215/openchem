@@ -1,0 +1,35 @@
+<div id="all-lectures">
+	<div class="page-header topicsHeader">
+		<a href="/admin" class="btn btn-default">
+				<strong>+ New Topic</strong>
+		</a>
+	</div>
+
+
+	<div class="jumbotron text-center" ng-show="admin.processing">
+		<p>Loading Topics...</p>
+	</div>
+
+	<table class="topicTable table table-bordered table-striped" ng-show="admin.topics">
+		<thead>
+			<tr>
+				<th bgcolor="#ecf0f1">Topic ID</th>
+				<th bgcolor="#ecf0f1">Topic Name</th>
+				<th bgcolor="#ecf0f1">Video URL</th>
+				<th bgcolor="#ecf0f1" class="span2"></th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr ng-repeat="topic in admin.topics">
+				<td>{{ topic._id }}</td>
+				<td>{{ topic.topicName }}</td>
+				<td><a href="{{ topic.videoUrl }}">{{ topic.videoUrl }}</td>
+				<td class="span2">
+					<a href="/admin/{{ topic._id }}" class="btn btn-primary">Edit</a>
+					<a href="#" ng-click="admin.deleteTopic(topic._id)" class="btn btn-danger">Delete</a>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+
+</div>

@@ -1,0 +1,219 @@
+<div id="admin">
+	<div class="row-fluid well">
+		<div class="span12">
+			<div class="row-fluid">
+				<div class="span12 text-center">
+					<h3> Topic {{admin.type}}</h3>
+				</div>
+			</div>
+			<div class="row-fluid">
+				<div class="span6">
+					<div class="row-fluid">
+						<div class="span12">
+							<h3 ng-class="admin.fieldColors['nameColor']">
+								Topic Name
+							</h3>
+							<div class="form-group pull-left">
+								<form class="pull-left" ng-submit="admin.inputTopicName()">
+									<input style="width:300px" ng-model="admin.topicData.topicName" type="text" placeholder="Topic Name.." />
+								</form>
+							</div>
+						</div>
+					</div>
+					<div class="row-fluid">
+						<div class="span12">
+							<h3 ng-class="admin.fieldColors['uploadVideoColor']">Upload Video</h3>
+							<img style="margin-bottom:20px" width="200px" ng-if="admin.topicData.videoId" height="200px" src="http://img.youtube.com/vi/{{admin.topicData.videoId}}/0.jpg">
+							<br/>
+							<a ng-if = "admin.topicData.videoUrl" href={{admin.topicData.videoUrl}}>{{admin.topicData.videoUrl}}</a>
+							<br/>
+							<div class="form-group pull-left">
+								<form class="pull-left" ng-submit="admin.inputVideoUrl()">
+									<input style="width:300px" ng-model="admin.videoUrlModel" type="text" placeholder="Video URL..." />
+									<button type="submit" class="btn btn-default btn-primary uploadBtn">Submit</button>
+								</form>
+							</div>
+						</div>
+					</div>
+					<div class="row-fluid">
+						<div class="span12">
+							<h3 ng-class="admin.fieldColors['keywordsColor']">Key Words:</h3>
+							<ul style="list-style-type:none">
+								<li style="float:left" ng-repeat="keyword in admin.topicData.keywords"><button ng-click="admin.deleteKeyword(keyword)" class="btn btn-small btn-success tagBtn">{{keyword}}</button>
+								</li>
+							</ul>
+							<div style="clear:both" class="form-group pull-left">
+								<form class="pull-left" ng-submit="admin.inputKeyword()">
+									<input style="width:300px" ng-model="admin.keyword" type="text" placeholder="Keyword..." />
+								
+									<button type="submit" class="btn btn-default btn-primary uploadBtn">Submit</button>
+								</form>
+							</div>
+						</div>
+					</div>
+					<div class="row-fluid">
+						<div class="span12">
+							<h3>Chem Text</h3>
+
+							<div style="padding-top:15px" class ="dropdown pull-left">
+								<span>Choose a file</span>
+								<button class="btn btn-default dropdown-toggle truncate" type="button" data-toggle="dropdown" aria-expanded="true">
+									{{ admin.currentFileName }}
+								</button>
+								<ul class="dropdown-menu dropdownList" aria-labelledby="fileDropdown">
+									<li ng-repeat="fileName in admin.files">
+										<span class="dropdownClickable" ng-click="admin.changeCurrentFile(fileName)">{{fileName}}</span>
+									</li>
+								</ul>
+								<span>Page Number</span>
+							
+							</div>
+
+							<ul style="clear:both">
+								<li class="urlButton truncate" ng-repeat="text in admin.topicData.chemText" ng-click="admin.deleteChemTextObj(text)">
+									<a target="_blank" href={{text.url}}>{{text.name}}</a>
+								</li>
+							</ul>
+							<form class="pull-left" ng-submit="admin.inputChemTextObj()">
+								<span> or input a url...</span>
+								<input style="width:300px" ng-model="admin.chemTextObj.url" type="text" placeholder="Chem Text URL..." />
+								<input style="width:300px" ng-model="admin.chemTextObj.name" type="text" placeHolder="Name of text..."/>
+								<button type="submit" class="btn btn-default btn-primary uploadBtn">Submit</button>
+							</form>
+							<div style="clear:both" ng-show="admin.chemTextMsg">
+								<div class="alert alert-danger">
+									{{admin.chemTextMsg}}
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="row-fluid">
+						<div class="span12">
+							<h3>Practice Problem</h3>
+							<ul>
+								<li class="urlButton truncate" ng-repeat="problem in admin.topicData.practiceProblems" ng-click="admin.deletePracticeProbObj(problem)">
+									<a target="_blank" href={{problem.url}}>{{problem.name}}</a>
+								</li>
+							</ul>
+							<form class="pull-left" ng-submit="admin.inputPracticeProbObj()">
+								<input style="width:300px" ng-model="admin.practiceProbObj.name" type="text" placeHolder="Name of problem..."/>
+								<input style="width:300px" ng-model="admin.practiceProbObj.url" type="text" placeholder="Practice Problem URL..." />
+								<button type="submit" class="btn btn-default btn-primary uploadBtn">Submit</button>
+							</form>
+							<div style="clear:both" ng-show="admin.problemsMsg">
+								<div class="alert alert-danger">
+									{{admin.problemsMsg}}
+								</div>
+							</div>
+						</div>	
+					</div>
+					<div class="row-fluid">
+						<div ng-if="admin.type === 'Upload'" class="span12">
+							<button type="button" ng-click="admin.uploadTopic()" class="btn btn-default btn-danger bigButton">Upload Topic</button>
+						</div>
+						<div ng-if="admin.type === 'Update'" class="span12">
+							<button type="button" ng-click="admin.updateTopic()" class="btn btn-default btn-danger bigButton">Update Topic</button>
+						</div>
+					</div>
+					<div ng-show="admin.message">
+						<div ng-class="admin.alertmsg">
+							{{ admin.message }}
+						</div>
+					</div>		
+				</div>
+				<div class="span6">
+					<h3 ng-class="admin.fieldColors['videoDescColor']">Video Description</h3>
+					<div class="form-group">
+						<textarea class="description" ng-model="admin.topicData.videoDescription" class="form-control"></textarea>
+					</div>
+					</br>
+					</br>
+					<a href="/admin/all-topics"><button type="button" class="btn btn-large btn-success">Edit Topics</button></a>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row-fluid well">
+		<div class="span12">
+			<div class="row-fluid container">
+				<div class="span12 text-center">
+					<h3> Upload a File </h3>
+				</div>
+			</div>
+			<div class="row-fluid">
+				<div class="span12">
+					<h4>File Upload</h4>
+					<form id = "uploadForm" action="/api/upload" method="post" enctype="multipart/form-data">
+						<input type="file" name="uploadPdf">
+						<button class="btn btn-default btn-primary" type="submit", name="submit" value='upload file'>Upload File</button>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!--
+	<div class="row-fluid">
+		<div class="span6 well">
+			<h3> Create Group </h3>
+			<form  ng-submit="inputGroupName()">
+				<h4>Group Name: <span style="color:#2980B9">{{groupName}}</span></h4>
+				<input style="width:200px" ng-model="groupNameModel" type="text" placeholder="Group Name..." />
+			</form>
+			<h4>Group Members:</h4>
+			<li ng-repeat="member in membersInput"><span style="color:#2980B9">{{member}}</span></li>
+
+			<form  ng-submit="inputMemberName()">
+				<h4>Input Group Member:</h4>
+				<input style="width:200px", ng-model="memberName" type="text" placeHolder="Member Name...">
+			</form>
+
+
+			<button type="button" ng-click="createGroup()" class="btn btn-large btn-primary createGroupBtn">Create Group</button>
+			<div ng-show="groupIncompleteInput" style="color:red">Please input a group name and at least one member.</div>
+			<div ng-show="groupCompleteInput" style="color:green">Group has been created.</div>
+		</div>
+		<div class="span6 well">
+			<h3> Upload Questions </h3>
+			<h4> Ask which group?: {{chosenGroup}} </h4>
+			
+			<ul class="groupList">
+				<li ng-repeat="group in backendGroups">
+					<div ng-click="chooseGroup(group.name)" class="topic">
+					{{ group.name }}
+					</div>
+				</li>
+			</ul>
+			<li ng-repeat="question in questions">
+				{{question}}
+			</li>
+			<form ng-submit="inputQuestion()">
+				<h4> Group Questions:</h4>
+				<input style="width:300px" ng-model="questionModel" type="text" placeholder="Question..." />
+			</form>
+			<button type="button" ng-click="uploadQuestions()" class="btn btn-large btn-primary mediumButton">Upload Questions</button>
+			<div ng-show="questionIncompleteInput" style="color:red">Please choose a group name and input at least one question.</div>
+		</div>
+	</div>
+
+	<div class="row-fluid">
+		<div class="span8 well">
+			<h3> Groups </h3>
+			<div ng-repeat="group in backendGroups">
+				<h4><span style="color:#34495E">Group Name:</span> <span style="color:#2980B9"> {{group.name}}</span> </h4>
+				<h4 style="color:#34495E">Members:</h4>
+				<ul>
+					<li ng-repeat="member in group.members"><span style="color:#2980B9">{{member}}</span>
+					</li>
+				</ul>
+				<h4 style="color:#34495E">Questions:</h4>
+				<ul>
+					<li ng-repeat="question in group.questions"><span style="color:#2980B9">{{question}}</span></li>
+				</ul>
+				</br>
+			</div>
+		</div>
+	</div>
+
+</div>
+-->

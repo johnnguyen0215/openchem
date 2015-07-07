@@ -1,0 +1,117 @@
+<div id="admin">
+	<div class="row-fluid well">
+		<div class="span6">
+			<div class="row-fluid">
+				<div class="span12">
+					<h3>Upload Video</h3>
+					<img style="margin-bottom:20px" ng-if = "thumbnailShow" width="200px" height="200px" src="http://img.youtube.com/vi/mWcr38tWpAU/0.jpg">
+					<div class="pull-left">
+						<form class="pull-left" ng-submit="inputVideoURL()">
+							<input style="width:300px" ng-model="videoURLModel" type="text" placeholder="Video URL..." />
+						</form>
+						<button type="button" ng-click="inputVideoURL()" class="btn btn-default btn-primary uploadBtn">Submit</button>
+					</div>
+				</div>
+			</div>
+			<div class="row-fluid">
+				<div class="span12">
+					<h3>Key Words:</h3>
+					<ul style="list-style-type:none">
+						<li style="float:left" ng-repeat="keyword in keywords"><button ng-click="removeTag(keyword)" class="btn btn-small btn-success tagBtn">{{keyword}}</button>
+						</li>
+					</ul>
+					<div style="clear:both" class="pull-left">
+						<form class="pull-left" ng-submit="inputKeyword()">
+							<input style="width:300px" ng-model="keyword" type="text" placeholder="Keyword..." />
+						</form>
+						<button type="button" ng-click="inputKeyword()" class="btn btn-default btn-primary uploadBtn">Submit</button>
+					</div>
+				</div>
+			</div>
+			<div class="row-fluid">
+				<div class="span12">
+					<button type="button" ng-click="uploadVideo()" class="btn btn-default btn-danger uploadVideoBtn">Upload Video</button>
+				</div>
+				<div style="color:green" ng-show="uploadSuccess">Video has been uploaded!</div>
+			</div>
+		</div>
+		<div class="span6">
+			<h3>Video Description</h3>
+			<div class="form-group">
+				<textarea ng-submit="uploadDescription" class="description" ng-model="videoDescription" class="form-control"></textarea>
+			</div>
+		</div>
+	</div>
+	<div class="row-fluid">
+		<div class="span6 well">
+			<h3> ChemWiki URL</h3>
+			<form class="pull-left" ng-submit="inputWikiURL()">
+				<input style="width:300px" ng-model="wikiURL" type="text" placeholder="ChemWiki URL..." />
+			</form>
+			<button type="button" ng-click="inputWikiURL()" class="btn btn-default btn-primary uploadBtn">Submit</button>
+			<div style="clear:both; color:green" ng-show = "wikiURLSuccess">Chemi Wiki link has been uploaded!</div>
+		</div>
+	</div>
+	<div class="row-fluid">
+		<div class="span6 well">
+			<h3> Create Group </h3>
+			<form  ng-submit="inputGroupName()">
+				<h4>Group Name: <span style="color:#2980B9">{{groupName}}</span></h4>
+				<input style="width:200px" ng-model="groupNameModel" type="text" placeholder="Group Name..." />
+			</form>
+			<h4>Group Members:</h4>
+			<li ng-repeat="member in membersInput"><span style="color:#2980B9">{{member}}</span></li>
+
+			<form  ng-submit="inputMemberName()">
+				<h4>Input Group Member:</h4>
+				<input style="width:200px", ng-model="memberName" type="text" placeHolder="Member Name...">
+			</form>
+
+
+			<button type="button" ng-click="createGroup()" class="btn btn-large btn-primary createGroupBtn">Create Group</button>
+			<div ng-show="groupIncompleteInput" style="color:red">Please input a group name and at least one member.</div>
+			<div ng-show="groupCompleteInput" style="color:green">Group has been created.</div>
+		</div>
+		<div class="span6 well">
+			<h3> Upload Questions </h3>
+			<h4> Ask which group?: {{chosenGroup}} </h4>
+			
+			<ul class="groupList">
+				<li ng-repeat="group in backendGroups">
+					<div ng-click="chooseGroup(group.name)" class="topic">
+					{{ group.name }}
+					</div>
+				</li>
+			</ul>
+			<li ng-repeat="question in questions">
+				{{question}}
+			</li>
+			<form ng-submit="inputQuestion()">
+				<h4> Group Questions:</h4>
+				<input style="width:300px" ng-model="questionModel" type="text" placeholder="Question..." />
+			</form>
+			<button type="button" ng-click="uploadQuestions()" class="btn btn-large btn-primary createGroupBtn">Upload Questions</button>
+			<div ng-show="questionIncompleteInput" style="color:red">Please choose a group name and input at least one question.</div>
+		</div>
+	</div>
+
+	<div class="row-fluid">
+		<div class="span8 well">
+			<h3> Groups </h3>
+			<div ng-repeat="group in backendGroups">
+				<h4><span style="color:#34495E">Group Name:</span> <span style="color:#2980B9"> {{group.name}}</span> </h4>
+				<h4 style="color:#34495E">Members:</h4>
+				<ul>
+					<li ng-repeat="member in group.members"><span style="color:#2980B9">{{member}}</span>
+					</li>
+				</ul>
+				<h4 style="color:#34495E">Questions:</h4>
+				<ul>
+					<li ng-repeat="question in group.questions"><span style="color:#2980B9">{{question}}</span></li>
+				</ul>
+				</br>
+			</div>
+		</div>
+	</div>
+
+</div>
