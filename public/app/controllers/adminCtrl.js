@@ -9,6 +9,8 @@ angular.module('adminCtrl', ['adminService', 'authService'])
 			vm.files = data;
 		});
 
+	vm.currentFileName = "File Dropdown";
+
 	vm.videoUrlModel = ''; // Stores the url 
 
 	vm.keyword = ''; // Stores the keyword being input
@@ -52,6 +54,7 @@ angular.module('adminCtrl', ['adminService', 'authService'])
 	'videoDescColor': 'blackHighlight'};
 
 	vm.changeCurrentFile = function(fileName){
+		vm.chemTextObj.url = "./assets/uploads/"+ fileName;
 		vm.currentFileName = fileName;
 	}
 

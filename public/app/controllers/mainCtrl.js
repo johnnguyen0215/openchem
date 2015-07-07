@@ -74,7 +74,7 @@ angular.module('mainCtrl', [])
 	}
 
 	vm.changeChemText = function(chemText){
-		vm.currentChemTextName = chemText;
+		vm.currentChemTextName = chemText.name;
 		vm.currentChemTextUrl = $sce.trustAsResourceUrl(chemText.url); 
 	}
 

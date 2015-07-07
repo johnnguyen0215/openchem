@@ -29,6 +29,9 @@
 	<script src="app/services/adminService.js"></script>
 	<script src="app/services/searchService.js"></script>
 
+	<!-- PDF Object.js -->
+	<script type="text/javascript" src="app/pdfobject.js"></script>
+
 	<!-- main Angular app files -->
 	<script src="app/app.routes.js"></script>
 	<script src="app/app.js"></script>
@@ -43,9 +46,16 @@
 
 	<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css">
 	<link rel="stylesheet" href="assets/css/style.css">
+	<script type="text/javascript">
+		window.onload = function(){
+			var myPDF = new PDFObject({url:"./uploads/math.pdf#page=3"}).embed("pdf");
+		};
+	</script>
 
 </head>
 <body ng-controller="mainController as main">
+	<div id="pdf">
+	</div>
 	<div class="container-fluid page-wrap">
 		<div id="header">
 			<div class="logo">

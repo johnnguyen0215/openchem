@@ -56,33 +56,34 @@
 							<h3>Chem Text</h3>
 
 							<div style="padding-top:15px" class ="dropdown pull-left">
-								<span>Choose a file</span>
+								<strong>Available files: </strong>
 								<button class="btn btn-default dropdown-toggle truncate" type="button" data-toggle="dropdown" aria-expanded="true">
 									{{ admin.currentFileName }}
+									<span class="caret"></span>
 								</button>
 								<ul class="dropdown-menu dropdownList" aria-labelledby="fileDropdown">
 									<li ng-repeat="fileName in admin.files">
 										<span class="dropdownClickable" ng-click="admin.changeCurrentFile(fileName)">{{fileName}}</span>
 									</li>
 								</ul>
-								<span>Page Number</span>
-							
 							</div>
-
-							<ul style="clear:both">
-								<li class="urlButton truncate" ng-repeat="text in admin.topicData.chemText" ng-click="admin.deleteChemTextObj(text)">
-									<a target="_blank" href={{text.url}}>{{text.name}}</a>
-								</li>
-							</ul>
-							<form class="pull-left" ng-submit="admin.inputChemTextObj()">
-								<span> or input a url...</span>
-								<input style="width:300px" ng-model="admin.chemTextObj.url" type="text" placeholder="Chem Text URL..." />
-								<input style="width:300px" ng-model="admin.chemTextObj.name" type="text" placeHolder="Name of text..."/>
-								<button type="submit" class="btn btn-default btn-primary uploadBtn">Submit</button>
-							</form>
-							<div style="clear:both" ng-show="admin.chemTextMsg">
-								<div class="alert alert-danger">
-									{{admin.chemTextMsg}}
+							<div>
+								<ul style="clear:both">
+									<li class="urlButton truncate" ng-repeat="text in admin.topicData.chemText" ng-click="admin.deleteChemTextObj(text)">
+										<a target="_blank" href={{text.url}}>{{text.name}}</a>
+									</li>
+								</ul>
+							</div>
+							<div>
+								<form class="pull-left" ng-submit="admin.inputChemTextObj()">
+									<input style="width:300px" ng-model="admin.chemTextObj.name" type="text" placeHolder="Name of text..."/>
+									<input style="width:300px" ng-model="admin.chemTextObj.url" type="text" placeholder="Chem Text URL..." />
+									<button type="submit" class="btn btn-default btn-primary uploadBtn">Submit</button>
+								</form>
+								<div style="clear:both" ng-show="admin.chemTextMsg">
+									<div class="alert alert-danger">
+										{{admin.chemTextMsg}}
+									</div>
 								</div>
 							</div>
 						</div>

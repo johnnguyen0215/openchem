@@ -68,7 +68,7 @@ module.exports = function(app, express) {
 
 	// route middleware to verify a token
 	apiRouter.use(
-		multer({dest:'./assets/uploads',
+		multer({dest:'./uploads',
 			rename: function(fieldname, filename){
 				return filename;
 			},
