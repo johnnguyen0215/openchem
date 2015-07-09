@@ -98,11 +98,9 @@
 			<iframe src="{{main.currentProblemUrl}}"></iframe>
 		</div>
 	</div>
-</div>
-	<!--
-	<div ng-show="userLoggedIn" class="row-fluid">
+	<div ng-if="main.userHasGroup" class="row-fluid">
 		<div class="span12 well">
-			<h3> My Group: {{myGroup.name}} </h3>
+			<h3> My Group: {{main.group.name}} </h3>
 			<div style="padding-bottom:20px" class ="dropdown">
 				<button class="btn btn-default dropdown-toggle" type="button" id ="memberDropdown" data-toggle="dropdown" aria-expanded="true">
 					Members
