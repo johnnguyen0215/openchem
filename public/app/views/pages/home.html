@@ -1,5 +1,4 @@
 
-
 <div id="home" class="navbar">
 	<div class="navbar-inner">
 		<ul class="nav">
@@ -45,7 +44,7 @@
 			</div>
 		</div>
 	</div>
-	<div class = "span5 well">
+	<div class = "span5 well scrollable300px">
 		<h3>Topics:</h3>
 		<div ng-if="main.searchMessage">
 			{{main.searchMessage}}
@@ -73,10 +72,12 @@
 				</li>
 			</ul>
 		</div>
-		<!--
-		<div style="clear:both" ng-if="main.currentChemTextName" class="flex-video widescreen">			
+		<div ng-show="main.currentChemTextType == 'pdf'" style="clear:both" class="flex-video widescreen">	
+			<div id="chemTextPdf"></div>
+		</div>
+		<div ng-if="main.currentChemTextType == 'link'" style="clear:both" class="flex-video widescreen">			
 			<iframe src="{{main.currentChemTextUrl}}"></iframe>	
-		</div>-->
+		</div>
 	</div>
 	<div class="span5 well">
 		<h3 class="pull-left"> Problems </h3>
@@ -90,7 +91,10 @@
 				</li>
 			</ul>
 		</div>
-		<div style="clear:both" ng-if="main.currentProblemName" class="flex-video widescreen">
+		<div ng-show="main.currentProblemType == 'pdf'" style="clear:both" class="flex-video widescreen">
+			<div id="problemPdf"></div>
+		</div>
+		<div ng-if="main.currentProblemType == 'link'" style="clear:both" class="flex-video widescreen">
 			<iframe src="{{main.currentProblemUrl}}"></iframe>
 		</div>
 	</div>

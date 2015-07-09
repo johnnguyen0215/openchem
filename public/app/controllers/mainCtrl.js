@@ -1,7 +1,6 @@
 angular.module('mainCtrl', [])
 .controller('mainController', function($rootScope, $sce, $location, Auth, Admin, Search) {
 	var vm = this;
-	
 	vm.currentTopicName = "Welcome to UCI OpenChem";
 	// get info if a person is logged in
 	vm.loggedIn = Auth.isLoggedIn();
@@ -52,10 +51,11 @@ angular.module('mainCtrl', [])
 
 	}
 
+
 	vm.setTopic = function(topic){
 		vm.topic = topic;
 		vm.currentTopicName = vm.topic.topicName;
-		vm.currentChemTextName = vm.currentChemTextUrl = vm.currentProblemName = vm.currentProblemUrl = '';
+		vm.currentChemTextName = vm.currentChemTextUrl = vm.currentChemTextType = vm.currentProblemName = vm.currentProblemUrl = vm.currentProblemType = '';
 		vm.parseEmbed(vm.topic.videoUrl);
 		if (vm.startTime){
 			vm.embedUrl = $sce.trustAsResourceUrl('https://www.youtube.com/embed/'+topic.videoId+'?start='+vm.startTime);
@@ -65,23 +65,44 @@ angular.module('mainCtrl', [])
 		}
 		if (vm.topic.chemText.length > 0){
 			vm.currentChemTextName = vm.topic.chemText[0].name;
-			vm.currentChemTextUrl = $sce.trustAsResourceUrl(vm.topic.chemText[0].url);
+			vm.currentChemTextType = vm.topic.chemText[0].type;
+			if (vm.currentChemTextType == "pdf"){
+				var chemTextPdf = new PDFObject({url: vm.topic.chemText[0].url}).embed("chemTextPdf");
+			}
+			else if(vm.currentChemTextType == "link"){
+				vm.currentChemTextUrl = $sce.trustAsResourceUrl(vm.topic.chemText[0].url);
+			}
 		}
 		if (vm.topic.practiceProblems.length > 0){
 			vm.currentProblemName = vm.topic.practiceProblems[0].name;
-			vm.currentProblemUrl = $sce.trustAsResourceUrl(vm.topic.practiceProblems[0].url);
+			vm.currentProblemType = vm.topic.chemText[0].type;
+			if (vm.currentProblemType == "pdf"){
+				var problemTextPdf = new PDFObject({url: vm.topic.practiceProblems[0].url}).embed("problemPdf");
+			}
+			else if (vm.currentProblemType == "link"){
+				vm.currentProblemUrl = $sce.trustAsResourceUrl(vm.topic.practiceProblems[0].url);
+			}
 		}	
 	}
 
 	vm.changeChemText = function(chemText){
 		vm.currentChemTextName = chemText.name;
+		vm.currentChemTextType = chemText.type;
+		if (vm.currentChemTextType == "pdf"){
+			var chemTextPdf = new PDFObject({url: chemText.url}).embed("chemTextPdf");
+		}
 		vm.currentChemTextUrl = $sce.trustAsResourceUrl(chemText.url); 
 	}
 
 	vm.changeProblem = function(problem){
 		vm.currentProblemName = problem.name;
+		vm.currentProblemType = problem.type;
+		if (vm.currentProblemType == "pdf"){
+			var problemPdf = new PDFObject({url: problem.url}).embed("problemPdf");
+		}
 		vm.currentProblemUrl = $sce.trustAsResourceUrl(problem.url);
 	}
+
 
 	// function to handle login form
 	vm.doLogin = function() {

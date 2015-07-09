@@ -257,7 +257,7 @@ module.exports = function(app, express) {
 
 	apiRouter.route('/admin/uploadDirectory')
 		.get(function(req,res){
-			var directory = fs.readdirSync('./assets/uploads');
+			var directory = fs.readdirSync('./uploads');
 			res.send(directory);
 		})
 

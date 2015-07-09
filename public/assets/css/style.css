@@ -4,6 +4,16 @@ html, body {
   background-color:#95AFC9;
 }
 
+.scrollable150px{
+  max-height:150px;
+  overflow:auto;
+}
+
+.scrollable300px{
+  max-height:300px;
+  overflow:auto;
+}
+
 .dropdownList{
   list-style-type:circle;
   padding-left:30px;
@@ -356,12 +366,13 @@ html, body {
   border:1px solid black;
   border-radius: 3px;
   margin-right:20px;
-  padding:10px;
-  margin-bottom:10px;
+  padding:5px;
+  margin-bottom:5px;
+  background-color:#3498db;
 }
 
 .question:hover, .urlButton:hover{
-  background-color:#BDC3C7;
+  background-color:#2980b9;
   cursor:pointer;
   cursor:hand;
 }

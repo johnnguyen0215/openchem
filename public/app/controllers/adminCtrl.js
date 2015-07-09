@@ -9,15 +9,16 @@ angular.module('adminCtrl', ['adminService', 'authService'])
 			vm.files = data;
 		});
 
-	vm.currentFileName = "File Dropdown";
+	vm.chemTextFileName = vm.problemFileName = "File Dropdown";
+
 
 	vm.videoUrlModel = ''; // Stores the url 
 
 	vm.keyword = ''; // Stores the keyword being input
 
-	vm.chemTextObj = {'name': '', 'url':''};
+	vm.chemTextObj = {'name': '', 'url':'', 'type':''};
 
-	vm.practiceProbObj = {'name': '', 'url':''};
+	vm.practiceProbObj = {'name': '', 'url':'', 'type':''};
 
 	vm.message = ''; // stores the message to be displayed upon submission
 
@@ -53,9 +54,14 @@ angular.module('adminCtrl', ['adminService', 'authService'])
 	vm.fieldColors = {'nameColor': 'blackHighlight', 'uploadVideoColor': 'blackHighlight', 'keywordsColor': 'blackHighlight',
 	'videoDescColor': 'blackHighlight'};
 
-	vm.changeCurrentFile = function(fileName){
-		vm.chemTextObj.url = "./assets/uploads/"+ fileName;
-		vm.currentFileName = fileName;
+	vm.changeChemTextFile = function(fileName){
+		vm.chemTextObj.url = "./uploads/"+ fileName;
+		vm.chemTextFileName = fileName;
+	}
+
+	vm.changeProblemFile = function(fileName){
+		vm.practiceProbObj.url = "./uploads/"+ fileName;
+		vm.problemFileName = fileName;
 	}
 
 	vm.parseId = function(url){
@@ -86,11 +92,24 @@ angular.module('adminCtrl', ['adminService', 'authService'])
         }
 	}
 
+	vm.isPdf = function(url){
+		if (url.indexOf('.pdf') > -1){
+			return true;
+		}
+		return false;
+	}
+
 	vm.inputChemTextObj = function(){
 		if (!vm.chemTextObj.name || !vm.chemTextObj.url){
 			vm.chemTextMsg = "Please input a value in both fields.";
 		}
 		else{
+			if (vm.isPdf(vm.chemTextObj.url)){
+				vm.chemTextObj.type = "pdf";
+			}
+			else {
+				vm.chemTextObj.type = "link";
+			}
 			vm.topicData.chemText.push(vm.chemTextObj);
 			vm.chemTextObj = {};
 			vm.chemTextMsg = '';
@@ -109,8 +128,13 @@ angular.module('adminCtrl', ['adminService', 'authService'])
 			vm.problemsMsg = "Please input a value in both fields.";
 		}
 		else{
+			if (vm.isPdf(vm.chemTextObj.url)){
+				vm.chemTextObj.type = "pdf";
+			}
+			else {
+				vm.chemTextObj.type = "link";
+			}
 			vm.topicData.practiceProblems.push(vm.practiceProbObj);
-
 			vm.practiceProbObj = {};
 			vm.problemsMsg = '';
 		}
@@ -198,7 +222,8 @@ angular.module('adminCtrl', ['adminService', 'authService'])
 					vm.processing = false;
 					vm.topicData = {};
 					$location.path('/admin/all-topics');
-				})
+					vm.message = data.message;
+				});
 			vm.alertmsg = "alert alert-info";
 			vm.keyword = '';
 			vm.videoUrlModel = '';
