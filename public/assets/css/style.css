@@ -4,13 +4,18 @@ html, body {
   background-color:#95AFC9;
 }
 
+.container{
+  width:1200px;
+}
+
+
 .scrollable150px{
   max-height:150px;
   overflow:auto;
 }
 
-.scrollable300px{
-  max-height:300px;
+.scrollable700px{
+  max-height:700px;
   overflow:auto;
 }
 
