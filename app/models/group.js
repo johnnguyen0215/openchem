@@ -2,7 +2,7 @@ var mongoose     = require('mongoose');
 var Schema       = mongoose.Schema;
 
 var GroupSchema   = new Schema({
-	name: {type: String, required: true},
+	name: {type: String, required: true, index:{unique: true}},
 	leaders: {type: Array, required: true},
 	members: { type: Array, required: false},
 	discussionTopics: { type: Array, required: false}

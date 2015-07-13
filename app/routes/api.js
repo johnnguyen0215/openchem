@@ -48,7 +48,9 @@ module.exports = function(app, express) {
 	        	email: user.email,
 	        	username: user.username,
 	        	admin: user.admin,
+	        	leader: user.leader,
 	        	groups: user.groups,
+	        	groupInvites: user.groupInvites,
 	        }, superSecret, {
 	          expiresInMinutes: 1440 // expires in 24 hours
 	        });
@@ -190,15 +192,17 @@ module.exports = function(app, express) {
 				if (req.body.email) user.email = req.body.email;
 				if (req.body.username) user.username = req.body.username;
 				if (req.body.password) user.password = req.body.password;
-				if (req.body.admin) user.email = req.body.admin;
+				if (req.body.admin) user.admin = req.body.admin;
+				if (req.body.leader) user.leader = req.body.leader;
 				if (req.body.groups) user.groups = req.body.groups;
+				if (req.body.groupInvites) user.groupInvites = req.body.groupInvites;
 
 				// save the user
 				user.save(function(err) {
 					if (err) res.send(err);
 
 					// return a message
-					res.json({ message: 'User updated!' });
+					res.send('User updated!');
 				});
 
 			});
@@ -236,8 +240,9 @@ module.exports = function(app, express) {
 			group.leaders = req.body.leaders;
 			group.save(function(err){
 				if(err){
+					console.log(err);
 					if (err.code == 11000){
-						return res.json({ success: false, message: 'A group with that name already exists. '});
+						return res.json({ success: false, error: 'A group with that name already exists. '});
 					}
 					else {
 						return res.send(err);
@@ -248,6 +253,19 @@ module.exports = function(app, express) {
 				}
 
 			})
+		})
+		.get(function(req,res){
+			Group.find({
+				'name': {$in: req.body.groupNames}
+			}), 
+			function(err, groups){
+				if (err){
+					console.log(err);
+				}
+				else{
+					res.json(groups);
+				}
+			}
 		})
 
 /*****************ADMIN ROUTING *************************/
@@ -369,6 +387,7 @@ module.exports = function(app, express) {
 
 	// api endpoint to get user information
 	apiRouter.get('/me', function(req, res) {
+		console.log(req.decoded);
 		res.send(req.decoded);
 	});
 

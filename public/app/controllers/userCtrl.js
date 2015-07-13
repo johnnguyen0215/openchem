@@ -33,7 +33,6 @@ angular.module('userCtrl', ['userService'])
 						vm.processing = false;
 						vm.users = data;
 					});
-
 			});
 	};
 

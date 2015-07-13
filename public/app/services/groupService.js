@@ -6,7 +6,11 @@ angular.module('groupService', [])
 	var groupFactory = {};
  	
  	groupFactory.addGroup = function(groupData){
- 		$http.post('/api/group', groupData);
+ 		return $http.post('/api/group', groupData);
+ 	}
+
+ 	groupFactory.getGroups = function(groupNames){
+ 		return $http.get('/api/group', groupNames)
  	}
 
 	return groupFactory;

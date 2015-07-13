@@ -20,6 +20,49 @@
 			</div>
 			<div class="row-fluid">
 				<div class="span12 well">
+					<h3> Edit Groups </h3>
+					<table class="myTabe table table-bordered table-striped">
+						<thead>
+							<tr>
+								<th bgcolor="#ecf0f1">Group Name</th>
+								<th bgcolor="#ecf0f1">Group Members</th>
+								<th bgcolor="#ecf0f1">Discussion Topics</th>
+								<th bgcolor="#ecf0f1" class="span2"></th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr ng-repeat="leaderGroup in groupCtrl.leaderGroups">
+								<td><input type="text" ng-model="leaderGroup.name"/></td>
+								<td>
+									<div class="scrollable150px">
+										<ul>
+											<li ng-repeat="member in leaderGroup.members" ng-click="groupCtrl.removeMember(member)">
+												{{member}}
+											</li>
+										</ul>
+									</div>
+								</td>
+								<td>
+									<div class="scrollable150px">
+										<ul>
+											<li ng-repeat="topic in leaderGroup.discussionTopics">
+												<span class="truncate"> Topic: {{topic.question}}</span>
+												<button class="btn btn-small btn-danger">Delete</button>
+											</li>
+										</ul>
+									</div>
+								</td>
+								</td>
+								<td class="span2">
+									<a href="#" ng-click="admin.deleteTopic(topic._id)" class="btn btn-danger">Delete</a>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+			<div class="row-fluid">
+				<div class="span12 well">
 					<h3> Your Groups </h3>
 					<h4>Choose a Group</h4>
 					<div style="padding-top:15px" class ="dropdown">
