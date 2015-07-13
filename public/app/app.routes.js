@@ -48,6 +48,12 @@ angular.module('app.routes', ['ngRoute'])
 			controllerAs: 'admin'
 		})
 
+		.when('/group',{
+			templateUrl : 'app/views/pages/group.html',
+			controller  : 'groupController',
+			controllerAs: 'groupCtrl'
+		})
+
 
 	$locationProvider.html5Mode(true);
 

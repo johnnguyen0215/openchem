@@ -10,6 +10,10 @@ angular.module('userService', [])
 		return $http.get('/api/users/' + id);
 	};
 
+	userFactory.inviteToGroup = function(email, groupName){
+		return $http.put('/api/users/invite/' + email, groupName);
+	}
+
 	// get all users
 	userFactory.all = function() {
 		return $http.get('/api/users/');

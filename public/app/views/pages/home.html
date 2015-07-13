@@ -11,6 +11,9 @@
 
 		<form class="navbar-search pull-right" ng-submit="main.search()">
 			<input ng-model="main.searchQuery" type="text" placeholder="Search a topic..." />
+			<button type="submit" class="btn btn-default searchBtn">
+				<i class="icon-search"></i>
+			</button>
 		</form>
 	</div>
 </div>
@@ -52,7 +55,7 @@
 		<ul ng-if="main.topicData" class="topicsList">
 			<li ng-repeat="topic in main.topicData">
 				<div class="row-fluid well well-small topicBtn" ng-click="main.setTopic(topic)">
-					<img class="span6 topicImg" width="150" height="150" src="http://img.youtube.com/vi/{{topic.videoId}}/0.jpg">
+					<img class="span6 img-polaroid" width="150" height="150" src="http://img.youtube.com/vi/{{topic.videoId}}/0.jpg">
 					<span class="span6">{{topic.topicName }}</span>
 				</div>
 			</li>

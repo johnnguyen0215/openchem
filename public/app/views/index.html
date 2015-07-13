@@ -22,12 +22,14 @@
 	<script src="app/controllers/mainCtrl.js"></script>
 	<script src="app/controllers/userCtrl.js"></script>
 	<script src="app/controllers/adminCtrl.js"></script>
+	<script src="app/controllers/groupCtrl.js"></script>
 
 	<!-- services -->
 	<script src="app/services/authService.js"></script>
 	<script src="app/services/userService.js"></script>
 	<script src="app/services/adminService.js"></script>
 	<script src="app/services/searchService.js"></script>
+	<script src="app/services/groupService.js"></script>
 
 	<!-- PDF Object.js -->
 	<script type="text/javascript" src="app/pdfobject.js"></script>
@@ -82,6 +84,12 @@
 					</li>
 					<li ng-if="main.isAdmin">
 						<a class="adminBtn" href="/admin">Admin</a>
+					</li>
+					<li ng-if = "main.isAdmin">
+						<span class="divider">|</span>
+					</li>
+					<li ng-if="main.isAdmin">
+						<a class="groupBtn" href="/group">Group</a>
 					</li>
 					<li ng-if="main.isAdmin">
 						<span class="divider">|</span>

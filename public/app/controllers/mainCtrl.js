@@ -1,5 +1,5 @@
 angular.module('mainCtrl', [])
-.controller('mainController', function($rootScope, $sce, $location, Auth, Admin, Search) {
+.controller('mainController', function($rootScope, $sce, $location, Auth, Search) {
 	var vm = this;
 	vm.currentTopicName = "Welcome to UCI OpenChem";
 	// get info if a person is logged in
@@ -21,7 +21,7 @@ angular.module('mainCtrl', [])
 					vm.isAdmin = true;
 				}
 				else{
-					vm.logoutCLass="logoutBtn";
+					vm.logoutClass="logoutBtn";
 					vm.isAdmin = false;
 				}
 			});

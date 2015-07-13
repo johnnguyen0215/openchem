@@ -284,12 +284,7 @@ angular.module('adminCtrl', ['adminService', 'authService'])
 			});
 
 	}
-
-	vm.uploadTopic = function(){
-		alert("hello world");
-	}
 	
-
 	vm.init = function(){
 		vm.loggedIn = Auth.isLoggedIn();
 		if (!vm.loggedIn){

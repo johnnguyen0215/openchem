@@ -1,0 +1,91 @@
+<div id="group">
+	<div class="row-fluid">
+		<div class="span12">
+			<div class="row-fluid">
+				<div class="span12 well">
+					<h3 style="text-align:center">Group Panel</h3>
+				</div>
+			</div>
+			<div class="row-fluid">
+				<div class="span12 well">
+					<h3> Add Group </h3>
+					<form ng-submit="groupCtrl.addGroup()">
+						<h4>Group Name</h4>
+						<input type="text" ng-model="groupCtrl.groupObj.name" placeHolder="Group Name...">
+						<button type="submit" class="btn btn-default btn-primary inputBtn">Submit</button>
+					</form>
+					<div ng-if="groupCtrl.message" ng-class="groupCtrl.alertmsg"> {{groupCtrl.message}}
+					</div>
+				</div>
+			</div>
+			<div class="row-fluid">
+				<div class="span12 well">
+					<h3> Your Groups </h3>
+					<h4>Choose a Group</h4>
+					<div style="padding-top:15px" class ="dropdown">
+						<button class="btn btn-default dropdown-toggle truncate" type="button" data-toggle="dropdown" aria-expanded="true">
+						</button>
+						<ul class="dropdown-menu dropdownList" aria-labelledby="groupsDropdown">
+							<li ng-repeat="group in groupCtrl.user.groups">
+								<span class="dropdownClickable" ng-click="groupCtrl.changeGroup(group)">{{group.name}}</span>
+							</li>
+						</ul>
+					</div>
+					<ul>
+						<li ng-repeat = "member in groupCtrl.group.members">
+							<span ng-click="groupCtrl.removeMember(member.username)">member.username</span>
+						</li>
+					</ul>
+					<form ng-submit ="groupCtrl.addMember()">
+						<h4>Invite Group Members</h4>
+						<input type="text" ng-model="groupCtrl.memberName" placeHolder="Member Name...">
+						<button type="submit" class="btn btn-default btn-primary inputBtn">Submit</button>
+					</form>
+					<div ng-if="groupCtrl.currentGroup">
+						<h3> Peer Leaders </h3>
+						<div class="well well-small">
+							<ul>
+								<li ng-repeat="leader in groupCtrl.currentGroup.leaders">
+									{{leader.name}}
+								</li>
+							</ul>
+						</div>
+						<h3> Group Members </h3>
+						<div class="well well-small"
+							<ul>
+								<li ng-repeat="member in groupCtrl.currentGroup.members">
+								</li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row-fluid">
+				<div class="span12 well">
+					<div>
+						<h3> Group Invites </h3>
+						<table class="myTable table table-bordered table-striped" ng-show="admin.topics">
+							<thead>
+								<tr>
+									<th bgcolor="#ecf0f1">Sent From</th>
+									<th bgcolor="#ecf0f1">Group Name</th>
+									<th bgcolor="#ecf0f1" class="span2"></th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr ng-repeat="invite in user.groupInvites">
+									<td>{{ invite.sentFrom }}</td>
+									<td>{{ invite.groupName }}</td>
+									<td class="span2">
+										<a href="/admin/{{ topic._id }}" class="btn btn-primary">Accept</a>
+										<a href="#" ng-click="admin.deleteTopic(topic._id)" class="btn btn-danger">Decline</a>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

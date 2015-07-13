@@ -35,7 +35,7 @@ html, body {
   cursor: hand;
 }
 
-.topicTable{
+.myTable{
   background-color:#ecf0f1;
 }
 
@@ -145,22 +145,27 @@ html, body {
   margin-left:10px;
 }
 
+.groupBtn{
+  float:left;
+  margin-left:10px;
+}
+
 .logoutBtn{
   margin-left:70px;
 }
 
 
 .logoutBtn2{
-  margin-left:150px;
+  margin-left:220px;
 }
 
-.homeBtn, .signupBtn, .loginBtn, .logoutBtn, .logoutBtn2, .adminBtn{
+.homeBtn, .signupBtn, .loginBtn, .logoutBtn, .logoutBtn2, .adminBtn, .groupBtn{
   font-size:17px;
   font-family:arial;
   color:white;
 }
 
-.homeBtn:hover, .signupBtn:hover, .loginBtn:hover, .logoutBtn2:hover, .logoutBtn:hover, .adminBtn:hover{
+.homeBtn:hover, .signupBtn:hover, .loginBtn:hover, .logoutBtn2:hover, .logoutBtn:hover, .adminBtn:hover,.groupBtn:hover{
   background-color:transparent !important;
 }
 
@@ -196,6 +201,11 @@ html, body {
 	margin-left:500px;
 }
 
+.searchBtn{
+  height:30px;
+  margin-bottom:15px;
+}
+
 .flex-video {
   position: relative;
   padding-top: 25px;
@@ -217,10 +227,6 @@ html, body {
   font-weight:bold;
 }
 
-.topicImg{
-
-  border:1px solid black;
-}
 
 .topicBtn:hover{
   background-color:#3498DB;
@@ -260,8 +266,8 @@ html, body {
  }
 
 
- .uploadBtn{
-  margin-left:10px;
+ .inputBtn{
+  margin-bottom:10px;
  }
 
  .description{

@@ -1,4 +1,3 @@
-
 angular.module('searchService', [])
 
 .factory('Search', function($http) {

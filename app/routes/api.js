@@ -1,6 +1,7 @@
 var bodyParser = require('body-parser'); 	// get body-parser
 var User       = require('../models/user');
 var Topic      = require('../models/topic');
+var Group      = require('../models/group');
 var jwt        = require('jsonwebtoken');
 var config     = require('../../config');
 var fs         = require('fs');
@@ -47,8 +48,7 @@ module.exports = function(app, express) {
 	        	email: user.email,
 	        	username: user.username,
 	        	admin: user.admin,
-	        	leader: user.leader,
-	        	groupId: user.groupId,
+	        	groups: user.groups,
 	        }, superSecret, {
 	          expiresInMinutes: 1440 // expires in 24 hours
 	        });
@@ -126,8 +126,7 @@ module.exports = function(app, express) {
 		res.json({ message: 'hooray! welcome to our api!' });	
 	});
 
-	// on routes that end in /users
-	// ----------------------------------------------------
+/*****************USER ROUTING *************************/
 	apiRouter.route('/users')
 
 		// create a user (accessed at POST http://localhost:8080/users)
@@ -148,9 +147,9 @@ module.exports = function(app, express) {
 						return res.send(err);
 					}
 				}
-
-				// return a message
-				res.json({ message: 'User created!' });
+				else{
+					res.json({ message: 'User created!' });
+				}
 			});
 
 		})
@@ -192,8 +191,7 @@ module.exports = function(app, express) {
 				if (req.body.username) user.username = req.body.username;
 				if (req.body.password) user.password = req.body.password;
 				if (req.body.admin) user.email = req.body.admin;
-				if (req.body.leader) user.leader = req.body.leader;
-				if (req.body.groupId) user.groupId = req.body.groupId;
+				if (req.body.groups) user.groups = req.body.groups;
 
 				// save the user
 				user.save(function(err) {
@@ -217,7 +215,42 @@ module.exports = function(app, express) {
 			});
 		});
 
+	apiRouter.route('/users/invite/:email')
+		.put(function(req,res){ 
+			console.log(req.params.email);
+			console.log(req.body.groupName);
+			/*
+			User.findOneAndUpdate({email:req.params.email}, {$push: { groupInvites: req.body  }} function(err,user){
+				if (err) res.send(err);
+				res.json(user);
+			});*/
+		})
 
+
+/***************** GROUP ROUTING *************************/
+
+	apiRouter.route('/group')
+		.post(function(req,res){
+			var group = new Group();
+			group.name = req.body.name;
+			group.leaders = req.body.leaders;
+			group.save(function(err){
+				if(err){
+					if (err.code == 11000){
+						return res.json({ success: false, message: 'A group with that name already exists. '});
+					}
+					else {
+						return res.send(err);
+					}
+				}
+				else{
+					res.json({message: "Successfully added Group"});
+				}
+
+			})
+		})
+
+/*****************ADMIN ROUTING *************************/
 	apiRouter.route('/admin')
 		.post(function(req, res) {
 			var topic = new Topic();		// create a new instance of the topic model

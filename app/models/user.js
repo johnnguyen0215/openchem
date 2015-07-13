@@ -9,8 +9,9 @@ var UserSchema   = new Schema({
 	username: { type: String, required: true, index: { unique: true }},
 	password: { type: String, required: true, select: false },
 	admin: { type: Boolean, required: false, default: false},
-	leader: { type: Boolean, required: false, default: false},
-	groupId: { type: Number, required: false, default: null}
+	leader: { type: Object, required: false, default: null},
+	groups: { type: Array, required: false, default: null},
+	groupInvites: { type: Array, required: false, default: null}
 });
 
 // hash the password before the user is saved
