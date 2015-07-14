@@ -32,11 +32,11 @@ angular.module('userService', [])
 
 	userFactory.inviteToGroup = function(email, groupName){
 		return $http.put('/api/users/invite/' + email, groupName);
-	}
+	};
 
-	userFactory.decrementGroupsCreated = function(id){
-		return $http.put('/api/users/decrement/'+id);
-	}
+	userFactory.deleteFromUsers = function(data){
+		return $http.post('/api/users/deleteGroups/', data);
+	};
 
 
 	// return our entire userFactory object

@@ -220,7 +220,7 @@ module.exports = function(app, express) {
 				res.json({ message: 'Successfully deleted' });
 			});
 		});
-
+/*
 	apiRouter.route('/users/invite/:email')
 		.put(function(req,res){ 
 			console.log(req.params.email);
@@ -229,8 +229,11 @@ module.exports = function(app, express) {
 			User.findOneAndUpdate({email:req.params.email}, {$push: { groupInvites: req.body  }} function(err,user){
 				if (err) res.send(err);
 				res.json(user);
-			});*/
+			});
 		})
+
+
+
 
 	apiRouter.route('/users/decrement/:user_id')
 		.put(function(req,res){
@@ -247,7 +250,34 @@ module.exports = function(app, express) {
 				}
 			}
 		})
+	Group.find({
+				'_id': req.params.groupparam
+			},
+			function(err, group){
+				console.log('hello World');
+				if (err) res.send(err);
+				User.update({}, {$pull:{'groups':group.name}}, {multi:true});
+				User.update({}, {$pull:{'leader.groups':group.name}}, {multi:true});
+			});
 
+*/
+
+	apiRouter.route('/users/deleteGroups')
+		.post(function(req,res){
+			User.update({}, {$pull:{'groups':req.body.groupName}}, {'multi':true}, 
+				function(err){
+					if (err) res.send(err);
+					
+				});
+			User.update({}, {$pull:{'leader.groups':req.body.groupName}}, {'multi':true},
+				function(err){
+					if (err) res.send(err);
+				});
+			User.update({'_id':req.body.leaderId}, {$inc:{'leader.groupsCreated':-1}},
+				function(err){
+					if(err) res.send(err);
+				});
+		})
 
 /***************** GROUP ROUTING *************************/
 
@@ -296,15 +326,6 @@ module.exports = function(app, express) {
 			})
 		})
 		.delete(function(req,res){
-			Group.find({
-				'_id': req.params.groupparam
-			},
-			function(err, group){
-				console.log('hello World');
-				if (err) res.send(err);
-				User.update({}, {$pull:{'groups':group.name}}, {multi:true});
-				User.update({}, {$pull:{'leader.groups':group.name}}, {multi:true});
-			});
 			Group.remove({
 				_id: req.params.groupParam
 			}, 

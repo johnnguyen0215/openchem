@@ -101,14 +101,12 @@ angular.module('groupCtrl', ['groupService', 'userService', 'authService'])
 
 	vm.deleteGroup = function(group){
 		vm.processing = true;
+		User.deleteFromUsers({groupName: group.name, leaderId: vm.userId})
+			.success(function(data){
+				vm.loadUser();
+			})
 		Group.deleteGroup(group._id)
 			.success(function(data){
-				alert(vm.user._id);
-				User.decrementGroupsCreated(vm.user._id)
-					.success(function(data){
-						alert('it was a success');
-						vm.user = data;
-					})
 				vm.deleteMessage = data.message;
 				vm.loadUserGroups();
 				vm.loadLeaderGroups();
