@@ -21,7 +21,8 @@
 			<div class="row-fluid">
 				<div class="span12 well">
 					<h3> Edit Groups </h3>
-					<table class="myTabe table table-bordered table-striped">
+					<div ng-if="groupCtrl.processing">Processing...</div>
+					<table ng-if="!groupCtrl.processing" class="myTabe table table-bordered table-striped">
 						<thead>
 							<tr>
 								<th bgcolor="#ecf0f1">Group Name</th>
@@ -54,7 +55,8 @@
 								</td>
 								</td>
 								<td class="span2">
-									<a href="#" ng-click="admin.deleteTopic(topic._id)" class="btn btn-danger">Delete</a>
+									<a href="#" ng-click="groupCtrl.updateGroup(leaderGroup)" class="btn btn-primary">Update</a>
+									<a href="#" ng-click="groupCtrl.deleteGroup(leaderGroup)" class="btn btn-danger">Delete</a>
 								</td>
 							</tr>
 						</tbody>
@@ -67,9 +69,10 @@
 					<h4>Choose a Group</h4>
 					<div style="padding-top:15px" class ="dropdown">
 						<button class="btn btn-default dropdown-toggle truncate" type="button" data-toggle="dropdown" aria-expanded="true">
+							{{groupCtrl.currentGroup.name}}
 						</button>
 						<ul class="dropdown-menu dropdownList" aria-labelledby="groupsDropdown">
-							<li ng-repeat="group in groupCtrl.user.groups">
+							<li ng-repeat="group in groupCtrl.userGroups">
 								<span class="dropdownClickable" ng-click="groupCtrl.changeGroup(group)">{{group.name}}</span>
 							</li>
 						</ul>
@@ -89,7 +92,7 @@
 						<div class="well well-small">
 							<ul>
 								<li ng-repeat="leader in groupCtrl.currentGroup.leaders">
-									{{leader.name}}
+									{{leader}}
 								</li>
 							</ul>
 						</div>

@@ -10,10 +10,6 @@ angular.module('userService', [])
 		return $http.get('/api/users/' + id);
 	};
 
-	userFactory.inviteToGroup = function(email, groupName){
-		return $http.put('/api/users/invite/' + email, groupName);
-	}
-
 	// get all users
 	userFactory.all = function() {
 		return $http.get('/api/users/');
@@ -33,6 +29,15 @@ angular.module('userService', [])
 	userFactory.delete = function(id) {
 		return $http.delete('/api/users/' + id);
 	};
+
+	userFactory.inviteToGroup = function(email, groupName){
+		return $http.put('/api/users/invite/' + email, groupName);
+	}
+
+	userFactory.decrementGroupsCreated = function(id){
+		return $http.put('/api/users/decrement/'+id);
+	}
+
 
 	// return our entire userFactory object
 	return userFactory;

@@ -20,7 +20,7 @@ module.exports = function(app, express) {
 	  // find the user
 	  User.findOne({
 	    username: req.body.username
-	  }).select('name email username password admin leader').exec(function(err, user) {
+	  }).select('_id name email username password admin groups groupInvites leader').exec(function(err, user) {
 
 	    if (err) throw err;
 
@@ -44,13 +44,14 @@ module.exports = function(app, express) {
 	        // if user is found and password is right
 	        // create a token
 	        var token = jwt.sign({
+	        	_id: user._id,
 	        	name: user.name,
 	        	email: user.email,
 	        	username: user.username,
 	        	admin: user.admin,
-	        	leader: user.leader,
 	        	groups: user.groups,
 	        	groupInvites: user.groupInvites,
+	        	leader: user.leader,
 	        }, superSecret, {
 	          expiresInMinutes: 1440 // expires in 24 hours
 	        });
@@ -188,6 +189,7 @@ module.exports = function(app, express) {
 				if (err) res.send(err);
 
 				// set the new user information if it exists in the request
+				if (req.body._id) user._id = req.body._id;
 				if (req.body.name) user.name = req.body.name;
 				if (req.body.email) user.email = req.body.email;
 				if (req.body.username) user.username = req.body.username;
@@ -230,6 +232,22 @@ module.exports = function(app, express) {
 			});*/
 		})
 
+	apiRouter.route('/users/decrement/:user_id')
+		.put(function(req,res){
+			User.update(
+				{_id : req.params.user_id},
+				{$inc:{"leader.groupsCreated":-1}}
+			),
+			function(err,user){
+				if (err){
+					res.send(err);
+				}
+				else{
+					res.json(user);
+				}
+			}
+		})
+
 
 /***************** GROUP ROUTING *************************/
 
@@ -254,19 +272,48 @@ module.exports = function(app, express) {
 
 			})
 		})
-		.get(function(req,res){
+
+	apiRouter.route('/group/:groupParam')
+		.post(function(req,res){
+			
+			var groupsArray;
+			if (req.params.groupParam == "leaderGroups"){
+				groupsArray = req.body.leader.groups;
+			}
+			else if (req.params.groupParam == "userGroups"){
+				groupsArray = req.body.groups;
+			}
+			console.log(groupsArray);
 			Group.find({
-				'name': {$in: req.body.groupNames}
-			}), 
+				'name': {$in: groupsArray}
+			}, 
 			function(err, groups){
 				if (err){
-					console.log(err);
+					res.send(err);
 				}
 				else{
 					res.json(groups);
 				}
-			}
+			})
 		})
+		.delete(function(req,res){
+			Group.find({
+				'_id': req.params.groupparam
+			},
+			function(err, group){
+				if (err) res.send(err);
+				User.update({}, {$pull:{'groups':{String:group.name}}});
+			});
+			Group.remove({
+				_id: req.params.groupParam
+			}, 
+			function(err, group) {
+				if (err) res.send(err);
+				res.json({message: "group has been deleted"});
+			});	
+		});
+	
+
 
 /*****************ADMIN ROUTING *************************/
 	apiRouter.route('/admin')
