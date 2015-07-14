@@ -283,7 +283,6 @@ module.exports = function(app, express) {
 			else if (req.params.groupParam == "userGroups"){
 				groupsArray = req.body.groups;
 			}
-			console.log(groupsArray);
 			Group.find({
 				'name': {$in: groupsArray}
 			}, 
@@ -301,13 +300,15 @@ module.exports = function(app, express) {
 				'_id': req.params.groupparam
 			},
 			function(err, group){
+				console.log('hello World');
 				if (err) res.send(err);
-				User.update({}, {$pull:{'groups':{String:group.name}}});
+				User.update({}, {$pull:{'groups':group.name}}, {multi:true});
+				User.update({}, {$pull:{'leader.groups':group.name}}, {multi:true});
 			});
 			Group.remove({
 				_id: req.params.groupParam
 			}, 
-			function(err, group) {
+			function(err) {
 				if (err) res.send(err);
 				res.json({message: "group has been deleted"});
 			});	

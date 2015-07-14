@@ -13,8 +13,8 @@ angular.module('groupService', [])
  		return $http.post('/api/group/'+groupType, userData);
  	}
 
- 	groupFactory.deleteGroup = function(groupId){
- 		return $http.delete('/api/group/'+groupId);
+ 	groupFactory.deleteGroup = function(groupId, userData){
+ 		return $http.delete('/api/group/'+groupId, userData);
  	}
 
  	groupFactory.all = function(){
