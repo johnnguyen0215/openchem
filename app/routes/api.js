@@ -232,36 +232,31 @@ module.exports = function(app, express) {
 			});
 		})
 
-
-
-
-	apiRouter.route('/users/decrement/:user_id')
-		.put(function(req,res){
-			User.update(
-				{_id : req.params.user_id},
-				{$inc:{"leader.groupsCreated":-1}}
-			),
-			function(err,user){
-				if (err){
-					res.send(err);
-				}
-				else{
-					res.json(user);
-				}
-			}
-		})
-	Group.find({
-				'_id': req.params.groupparam
-			},
-			function(err, group){
-				console.log('hello World');
-				if (err) res.send(err);
-				User.update({}, {$pull:{'groups':group.name}}, {multi:true});
-				User.update({}, {$pull:{'leader.groups':group.name}}, {multi:true});
-			});
-
+						vm.user.leader.groups.push(vm.groupObj.name);
+						vm.user.leader.groupsCreated += 1;
+						vm.user.groups.push(vm.groupObj.name);
 */
+	apiRouter.put('/updateLeaderGroups',function(req,res){
+		User.findByIdAndUpdate(req.body.leaderId,
+			{$push:{'groups':req.body.groupName, 'leader.groups':req.body.groupName},$inc:{'leader.groupsCreated':1}},
+			function(err){
+				if(err) res.send(err);
+			});
+	})
 
+	apiRouter.post('/deleteUserGroups', function(req,res){
+		User.update({}, {$pull:{'groups':req.body.groupName, 'leader.groups':req.body.groupName}}, {multi:true}, 
+			function(err){
+				if (err) res.send(err);
+			});
+		User.findByIdAndUpdate(req.body.leaderId, 
+			{$inc:{'leader.groupsCreated':-1}},
+			function(err){
+				if(err) res.send(err);
+			});
+	});
+	
+/*
 	apiRouter.route('/users/deleteGroups')
 		.post(function(req,res){
 			User.update({}, {$pull:{'groups':req.body.groupName}}, {'multi':true}, 
@@ -277,7 +272,8 @@ module.exports = function(app, express) {
 				function(err){
 					if(err) res.send(err);
 				});
-		})
+		})*/
+
 
 /***************** GROUP ROUTING *************************/
 

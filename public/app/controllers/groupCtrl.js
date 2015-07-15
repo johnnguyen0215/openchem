@@ -73,10 +73,8 @@ angular.module('groupCtrl', ['groupService', 'userService', 'authService'])
 					else{
 						vm.alertmsg = "alert alert-info";
 						vm.message = data.message;
-						vm.user.leader.groups.push(vm.groupObj.name);
-						vm.user.leader.groupsCreated += 1;
-						vm.user.groups.push(vm.groupObj.name);
-						User.update(vm.user._id, vm.user);
+						User.updateLeaderGroups({groupName: vm.groupObj.name, leaderId: vm.userId});
+						vm.loadUser();
 						vm.groupObj = {
 							name: "",
 							leaders: [],
@@ -103,7 +101,7 @@ angular.module('groupCtrl', ['groupService', 'userService', 'authService'])
 		vm.processing = true;
 		User.deleteFromUsers({groupName: group.name, leaderId: vm.userId})
 			.success(function(data){
-				vm.loadUser();
+				alert("successful deletion from users groups");
 			})
 		Group.deleteGroup(group._id)
 			.success(function(data){
