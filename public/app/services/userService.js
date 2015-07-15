@@ -38,8 +38,12 @@ angular.module('userService', [])
 		return $http.put('/api/updateLeaderGroups', data);
 	};
 
-	userFactory.deleteFromUsers = function(data){
-		return $http.post('/api/deleteUserGroups', data);
+	userFactory.deleteFromUsers = function(groupName){
+		return $http.delete('/api/deleteUserGroups/'+ groupName);
+	};
+
+	userFactory.decrementGroupsCreated = function(leaderId){
+		return $http.delete('/api/decrementGroupsCreated/'+leaderId);
 	};
 
 

@@ -11,27 +11,21 @@ angular.module('groupCtrl', ['groupService', 'userService', 'authService'])
 		})
 
 	vm.loadUser = function(){
-		vm.processing = true;
-		if (vm.userId){
-			User.get(vm.userId)
-				.success(function(data){
-					vm.user = data;
-					if (vm.user.groups.length > 0){
-						vm.loadUserGroups();
-					}
-					if (vm.user.leader.groups.length > 0){
-						vm.loadLeaderGroups();
-					}
-					vm.processing = false;
-				})
-		}
+		User.get(vm.userId)
+			.success(function(data){
+				vm.user = data;
+				vm.loadUserGroups();
+				vm.loadLeaderGroups();
+			})
 	}
 	
 	vm.loadUserGroups = function(){
 		Group.getGroups("userGroups", vm.user)
 			.success(function(data){
 				vm.userGroups = data;
-				vm.currentGroup = vm.userGroups[0];
+				if (vm.userGroups){
+					vm.currentGroup = vm.userGroups[0];
+				}
 			})
 	}
 	
@@ -66,7 +60,9 @@ angular.module('groupCtrl', ['groupService', 'userService', 'authService'])
 
 			Group.addGroup(vm.groupObj)
 				.success(function(data){
+					alert('added group');
 					if (data.error){
+						alert('there was an error!');
 						vm.alertmsg = "alert alert-danger";
 						vm.message = data.error;
 					}
@@ -74,15 +70,13 @@ angular.module('groupCtrl', ['groupService', 'userService', 'authService'])
 						vm.alertmsg = "alert alert-info";
 						vm.message = data.message;
 						User.updateLeaderGroups({groupName: vm.groupObj.name, leaderId: vm.userId});
-						vm.loadUser();
 						vm.groupObj = {
 							name: "",
 							leaders: [],
 							members: [],
 							discussionTopics: []
 						}
-						vm.loadUserGroups();
-						vm.loadLeaderGroups();
+						vm.loadUser();
 					}
 				})
 		}
@@ -99,15 +93,16 @@ angular.module('groupCtrl', ['groupService', 'userService', 'authService'])
 
 	vm.deleteGroup = function(group){
 		vm.processing = true;
-		User.deleteFromUsers({groupName: group.name, leaderId: vm.userId})
+		User.deleteFromUsers(group.name)
 			.success(function(data){
-				alert("successful deletion from users groups");
+			})
+		User.decrementGroupsCreated(vm.userId)
+			.success(function(data){
 			})
 		Group.deleteGroup(group._id)
 			.success(function(data){
 				vm.deleteMessage = data.message;
-				vm.loadUserGroups();
-				vm.loadLeaderGroups();
+				vm.loadUser();
 				vm.processing = false;
 			});
 	}

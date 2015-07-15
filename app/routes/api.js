@@ -237,25 +237,32 @@ module.exports = function(app, express) {
 						vm.user.groups.push(vm.groupObj.name);
 */
 	apiRouter.put('/updateLeaderGroups',function(req,res){
-		User.findByIdAndUpdate(req.body.leaderId,
+		User.update({_id:req.body.leaderId},
 			{$push:{'groups':req.body.groupName, 'leader.groups':req.body.groupName},$inc:{'leader.groupsCreated':1}},
 			function(err){
 				if(err) res.send(err);
+				res.json({message:'update successful'});
 			});
 	})
 
-	apiRouter.post('/deleteUserGroups', function(req,res){
-		User.update({}, {$pull:{'groups':req.body.groupName, 'leader.groups':req.body.groupName}}, {multi:true}, 
+	apiRouter.delete('/deleteUserGroups/:groupName', function(req,res){
+		User.update({}, {$pull:{'groups':req.params.groupName, 'leader.groups':req.params.groupName}}, {multi:true}, 
 			function(err){
 				if (err) res.send(err);
+				res.json({message:'successfully removed from groups'});
 			});
-		User.findByIdAndUpdate(req.body.leaderId, 
+	})
+
+	apiRouter.delete('/decrementGroupsCreated/:leaderId', function(req,res){
+		User.findByIdAndUpdate(req.params.leaderId, 
 			{$inc:{'leader.groupsCreated':-1}},
 			function(err){
 				if(err) res.send(err);
+				res.json({message:'successfully decremented'});
 			});
-	});
+	})
 	
+
 /*
 	apiRouter.route('/users/deleteGroups')
 		.post(function(req,res){
