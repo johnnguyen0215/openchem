@@ -38,6 +38,10 @@ angular.module('userService', [])
 		return $http.put('/api/updateLeaderGroups', data);
 	};
 
+	userFactory.updateUserGroups = function(groupName){
+		return $http.put('/api/updateUserGroups', groupName);
+	};
+
 	userFactory.deleteFromUsers = function(groupName){
 		return $http.delete('/api/deleteUserGroups/'+ groupName);
 	};
@@ -46,6 +50,9 @@ angular.module('userService', [])
 		return $http.delete('/api/decrementGroupsCreated/'+leaderId);
 	};
 
+	userFactory.inviteUser = function(userEmail, invite){
+		return $http.put('/api/invite/'+userEmail, invite);
+	}
 
 	// return our entire userFactory object
 	return userFactory;

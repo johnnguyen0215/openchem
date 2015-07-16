@@ -151,13 +151,14 @@ html, body {
 }
 
 .logoutBtn{
-  margin-left:70px;
+  margin-left:150px;
 }
 
 
 .logoutBtn2{
   margin-left:220px;
 }
+
 
 .homeBtn, .signupBtn, .loginBtn, .logoutBtn, .logoutBtn2, .adminBtn, .groupBtn{
   font-size:17px;

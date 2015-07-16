@@ -16,7 +16,7 @@ angular.module('groupService', [])
  	groupFactory.deleteGroup = function(groupId, userData){
  		return $http.delete('/api/group/'+groupId, userData);
  	}
-
+ 	
  	groupFactory.all = function(){
  		return $http.get('/api/group');
  	}

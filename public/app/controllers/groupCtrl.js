@@ -60,9 +60,7 @@ angular.module('groupCtrl', ['groupService', 'userService', 'authService'])
 
 			Group.addGroup(vm.groupObj)
 				.success(function(data){
-					alert('added group');
 					if (data.error){
-						alert('there was an error!');
 						vm.alertmsg = "alert alert-danger";
 						vm.message = data.error;
 					}
@@ -84,11 +82,24 @@ angular.module('groupCtrl', ['groupService', 'userService', 'authService'])
 
 
 	vm.addMember = function(){
-		User.inviteToGroup(vm.memberName)
+		User.inviteUser(vm.memberName, {sentBy:vm.user.username, groupName: vm.currentGroup.name})
 			.success(function(data){
 			})
 
 		vm.memberName = '';
+	}
+
+	vm.updateGroup = function(group){
+		vm.processing = true;
+		User.updateUserGroups({group.name})
+			.success(function(data){
+			})
+		Group.updateGroup(group._id)
+			.success(function(data){
+				vm.editMessage = data.message;
+				vm.loadUser();
+				vm.processing = false;
+			})
 	}
 
 	vm.deleteGroup = function(group){
@@ -101,7 +112,7 @@ angular.module('groupCtrl', ['groupService', 'userService', 'authService'])
 			})
 		Group.deleteGroup(group._id)
 			.success(function(data){
-				vm.deleteMessage = data.message;
+				vm.editMessage = data.message;
 				vm.loadUser();
 				vm.processing = false;
 			});

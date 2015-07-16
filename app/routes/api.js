@@ -220,28 +220,23 @@ module.exports = function(app, express) {
 				res.json({ message: 'Successfully deleted' });
 			});
 		});
-/*
-	apiRouter.route('/users/invite/:email')
-		.put(function(req,res){ 
-			console.log(req.params.email);
-			console.log(req.body.groupName);
-			/*
-			User.findOneAndUpdate({email:req.params.email}, {$push: { groupInvites: req.body  }} function(err,user){
-				if (err) res.send(err);
-				res.json(user);
-			});
-		})
 
-						vm.user.leader.groups.push(vm.groupObj.name);
-						vm.user.leader.groupsCreated += 1;
-						vm.user.groups.push(vm.groupObj.name);
-*/
 	apiRouter.put('/updateLeaderGroups',function(req,res){
 		User.update({_id:req.body.leaderId},
 			{$push:{'groups':req.body.groupName, 'leader.groups':req.body.groupName},$inc:{'leader.groupsCreated':1}},
 			function(err){
 				if(err) res.send(err);
 				res.json({message:'update successful'});
+			});
+	})
+
+	apiRouter.put('/updateUserGroups', function(req,res){
+		User.update(
+			{groups:req.body.oldGroupName}, 
+			{$set:{"groups.$":req.body.newGroupName}},
+			function(err){
+				if(err) res.send(err);
+				res.json({message: "Updated Group"});
 			});
 	})
 
@@ -261,25 +256,25 @@ module.exports = function(app, express) {
 				res.json({message:'successfully decremented'});
 			});
 	})
-	
 
-/*
-	apiRouter.route('/users/deleteGroups')
-		.post(function(req,res){
-			User.update({}, {$pull:{'groups':req.body.groupName}}, {'multi':true}, 
-				function(err){
-					if (err) res.send(err);
-					
-				});
-			User.update({}, {$pull:{'leader.groups':req.body.groupName}}, {'multi':true},
-				function(err){
-					if (err) res.send(err);
-				});
-			User.update({'_id':req.body.leaderId}, {$inc:{'leader.groupsCreated':-1}},
-				function(err){
-					if(err) res.send(err);
-				});
-		})*/
+
+	apiRouter.put('/invite/:email', function(req,res){
+		//console.log("invitee email: " + req.params.email);
+		//console.log("invite: " + req.body);
+		User.findOneAndUpdate(
+			{email:req.params.email}, 
+			{$push: { groupInvites: req.body  }}, 
+			function(err,user){
+				if (err){
+					res.send(err);
+					res.json({message:"invite sent"});
+				}
+				else{
+					res.json(user);
+				}
+			});
+	})
+
 
 
 /***************** GROUP ROUTING *************************/
@@ -337,7 +332,6 @@ module.exports = function(app, express) {
 				res.json({message: "group has been deleted"});
 			});	
 		});
-	
 
 
 /*****************ADMIN ROUTING *************************/

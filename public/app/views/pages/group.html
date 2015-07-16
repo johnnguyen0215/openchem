@@ -22,7 +22,7 @@
 				<div class="span12 well">
 					<h3> Edit Groups </h3>
 					<div ng-if="groupCtrl.processing">Processing...</div>
-					<table ng-if="!groupCtrl.processing" class="myTabe table table-bordered table-striped">
+					<table ng-if="!groupCtrl.processing" class="myTable table table-bordered table-striped">
 						<thead>
 							<tr>
 								<th bgcolor="#ecf0f1">Group Name</th>
@@ -61,6 +61,9 @@
 							</tr>
 						</tbody>
 					</table>
+					<div ng-if="groupCtrl.editMessage">
+						{{groupCtrl.editMessage}}
+					</div>
 				</div>
 			</div>
 			<div class="row-fluid">
