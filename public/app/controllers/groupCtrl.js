@@ -4,6 +4,7 @@ angular.module('groupCtrl', ['groupService', 'userService', 'authService'])
 	var vm = this;
 
 	// loads current user information
+	
 	Auth.getUser()
 		.success(function(data){
 			vm.userId = data._id;
@@ -20,7 +21,7 @@ angular.module('groupCtrl', ['groupService', 'userService', 'authService'])
 	}
 	
 	vm.loadUserGroups = function(){
-		Group.getGroups("userGroups", vm.user)
+		Group.getGroups({groups: vm.user.groups})
 			.success(function(data){
 				vm.userGroups = data;
 				if (vm.userGroups){
@@ -31,13 +32,11 @@ angular.module('groupCtrl', ['groupService', 'userService', 'authService'])
 	
 	
 	vm.loadLeaderGroups = function(){
-		Group.getGroups("leaderGroups", vm.user)
+		Group.getGroups({groups: vm.user.leader.groups})
 			.success(function(data){
 				vm.leaderGroups = data;
 			})
 	}
-	
-
 
 	vm.groupObj = {
 		name: "",
@@ -46,18 +45,17 @@ angular.module('groupCtrl', ['groupService', 'userService', 'authService'])
 		discussionTopics: []
 	}
 
+
 	vm.addGroup = function(){
 		vm.message = '';
 		// input the group object
 
 		if (vm.user.leader.groupsCreated >= 5){
-			vm.alertmsg = "alert alert-danger"
-			vm.message = "Maximum number of groups created has been reached"
+			vm.alertmsg = "alert alert-danger";
+			vm.message = "Maximum number of groups created has been reached";
 		}
 		else{
-
 			vm.groupObj.leaders.push(vm.user.username);
-
 			Group.addGroup(vm.groupObj)
 				.success(function(data){
 					if (data.error){
@@ -67,18 +65,22 @@ angular.module('groupCtrl', ['groupService', 'userService', 'authService'])
 					else{
 						vm.alertmsg = "alert alert-info";
 						vm.message = data.message;
-						User.updateLeaderGroups({groupName: vm.groupObj.name, leaderId: vm.userId});
+						User.insertLeaderGroup({groupName: vm.groupObj.name, leaderId: vm.userId})
+							.success(function(data){
+								vm.loadUser();
+							})
 						vm.groupObj = {
 							name: "",
 							leaders: [],
 							members: [],
 							discussionTopics: []
 						}
-						vm.loadUser();
 					}
 				})
 		}
 	}
+
+//db.groups.find({name:"Hector Group"}, {_id:1}).forEach(function(doc){db.users.update({username:"john"},{$push:{groups:doc._id}})})
 
 
 	vm.addMember = function(){
@@ -89,28 +91,30 @@ angular.module('groupCtrl', ['groupService', 'userService', 'authService'])
 		vm.memberName = '';
 	}
 
-	vm.updateGroup = function(group){
+
+	vm.updateGroup = function(groupData){
 		vm.processing = true;
-		User.updateUserGroups({group.name})
+		User.updateUserGroups({group_id: groupData._id, groupName: groupData.name})
 			.success(function(data){
+
 			})
-		Group.updateGroup(group._id)
+		Group.updateGroup(groupData._id, groupData)
 			.success(function(data){
 				vm.editMessage = data.message;
 				vm.loadUser();
 				vm.processing = false;
 			})
 	}
-
-	vm.deleteGroup = function(group){
+	
+	vm.deleteGroup = function(groupId){
 		vm.processing = true;
-		User.deleteFromUsers(group.name)
+		User.deleteFromUsers(groupId)
 			.success(function(data){
 			})
 		User.decrementGroupsCreated(vm.userId)
 			.success(function(data){
 			})
-		Group.deleteGroup(group._id)
+		Group.deleteGroup(groupId)
 			.success(function(data){
 				vm.editMessage = data.message;
 				vm.loadUser();

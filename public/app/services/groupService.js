@@ -9,17 +9,23 @@ angular.module('groupService', [])
  		return $http.post('/api/group', groupData);
  	}
 
- 	groupFactory.getGroups = function(groupType, userData){
- 		return $http.post('/api/group/'+groupType, userData);
+ 	groupFactory.updateGroup = function(groupId, groupData){
+ 		return $http.put('/api/group/'+groupId, groupData);
  	}
 
- 	groupFactory.deleteGroup = function(groupId, userData){
- 		return $http.delete('/api/group/'+groupId, userData);
+ 	groupFactory.deleteGroup = function(groupId){
+ 		return $http.delete('/api/group/'+groupId);
  	}
+
+ 	groupFactory.getGroups = function(groupsArray){
+ 		return $http.post('/api/getGroups', groupsArray);
+ 	}
+
  	
  	groupFactory.all = function(){
  		return $http.get('/api/group');
  	}
+
 
 	return groupFactory;
 

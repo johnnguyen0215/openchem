@@ -56,12 +56,12 @@
 								</td>
 								<td class="span2">
 									<a href="#" ng-click="groupCtrl.updateGroup(leaderGroup)" class="btn btn-primary">Update</a>
-									<a href="#" ng-click="groupCtrl.deleteGroup(leaderGroup)" class="btn btn-danger">Delete</a>
+									<a href="#" ng-click="groupCtrl.deleteGroup(leaderGroup._id)" class="btn btn-danger">Delete</a>
 								</td>
 							</tr>
 						</tbody>
 					</table>
-					<div ng-if="groupCtrl.editMessage">
+					<div class = "alert alert-info" ng-if="groupCtrl.editMessage">
 						{{groupCtrl.editMessage}}
 					</div>
 				</div>
@@ -72,7 +72,7 @@
 					<h4>Choose a Group</h4>
 					<div style="padding-top:15px" class ="dropdown">
 						<button class="btn btn-default dropdown-toggle truncate" type="button" data-toggle="dropdown" aria-expanded="true">
-							{{groupCtrl.currentGroup.name}}
+							{{ groupCtrl.currentGroup.name }}
 						</button>
 						<ul class="dropdown-menu dropdownList" aria-labelledby="groupsDropdown">
 							<li ng-repeat="group in groupCtrl.userGroups">

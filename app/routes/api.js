@@ -5,7 +5,8 @@ var Group      = require('../models/group');
 var jwt        = require('jsonwebtoken');
 var config     = require('../../config');
 var fs         = require('fs');
-var multer = require('multer');
+var multer 	   = require('multer');
+var mongoose   = require('mongoose');
 
 // super secret for creating tokens
 var superSecret = config.secret;
@@ -212,39 +213,55 @@ module.exports = function(app, express) {
 
 		// delete the user with this id
 		.delete(function(req, res) {
-			Topic.remove({
-				_id: req.params.user_id
-			}, function(err, user) {
-				if (err) res.send(err);
-
-				res.json({ message: 'Successfully deleted' });
+			Topic.remove({_id: req.params.user_id}, 
+				function(err, user) {
+					if (err){ 
+						res.send(err)
+					}
+					else{
+						res.json({ message: 'Successfully deleted' });
+					}
 			});
 		});
 
-	apiRouter.put('/updateLeaderGroups',function(req,res){
-		User.update({_id:req.body.leaderId},
-			{$push:{'groups':req.body.groupName, 'leader.groups':req.body.groupName},$inc:{'leader.groupsCreated':1}},
-			function(err){
-				if(err) res.send(err);
-				res.json({message:'update successful'});
-			});
+//	db.groups.find({name:"Hector Group"}, {_id:1}).forEach(function(doc){db.users.update({username:"john"},{$push:{groups:doc._id}})})
+
+	apiRouter.put('/insertLeaderGroup',function(req,res){
+		Group.find({name:req.body.groupName}, {_id:1}, function(err,doc){
+			if (err){
+				res.send(err);
+			}
+			else{
+				User.update({_id:req.body.leaderId},
+						{$push:{groups:doc[0]._id, 'leader.groups':doc[0]._id}, $inc:{'leader.groupsCreated':1}},
+						function(err){
+							if(err){
+								res.send(err);
+							}
+							else{
+								res.send("Leader Groups have been updated");
+							}
+						})
+			}
+		})
 	})
 
 	apiRouter.put('/updateUserGroups', function(req,res){
 		User.update(
-			{groups:req.body.oldGroupName}, 
-			{$set:{"groups.$":req.body.newGroupName}},
+			{groups:req.body.group_id}, 
+			{$set:{"groups.$":req.body.newGroupName, "leader.groups.$":req.body.newGroupName}},
 			function(err){
 				if(err) res.send(err);
 				res.json({message: "Updated Group"});
 			});
-	})
-
-	apiRouter.delete('/deleteUserGroups/:groupName', function(req,res){
-		User.update({}, {$pull:{'groups':req.params.groupName, 'leader.groups':req.params.groupName}}, {multi:true}, 
+	}
+)
+	apiRouter.delete('/deleteFromUsers/:groupId', function(req,res){
+		console.log(req.params.groupId);
+		User.update({}, {$pull:{'groups':mongoose.Types.ObjectId(req.params.groupId), 'leader.groups':mongoose.Types.ObjectId(req.params.groupId)}}, {multi:true}, 
 			function(err){
 				if (err) res.send(err);
-				res.json({message:'successfully removed from groups'});
+				res.json({message:'Successfully removed from groups'});
 			});
 	})
 
@@ -259,8 +276,6 @@ module.exports = function(app, express) {
 
 
 	apiRouter.put('/invite/:email', function(req,res){
-		//console.log("invitee email: " + req.params.email);
-		//console.log("invite: " + req.body);
 		User.findOneAndUpdate(
 			{email:req.params.email}, 
 			{$push: { groupInvites: req.body  }}, 
@@ -301,37 +316,50 @@ module.exports = function(app, express) {
 			})
 		})
 
-	apiRouter.route('/group/:groupParam')
-		.post(function(req,res){
-			
-			var groupsArray;
-			if (req.params.groupParam == "leaderGroups"){
-				groupsArray = req.body.leader.groups;
-			}
-			else if (req.params.groupParam == "userGroups"){
-				groupsArray = req.body.groups;
-			}
-			Group.find({
-				'name': {$in: groupsArray}
-			}, 
-			function(err, groups){
-				if (err){
-					res.send(err);
-				}
-				else{
-					res.json(groups);
-				}
+
+	apiRouter.route('/group/:group_id')
+		.put(function(req, res){
+			Group.findById(req.params.group_id, function(err, group){
+				if (err) res.send(err);
+
+				// set the group information
+				if (req.body._id) group._id = req.body._id;
+				if (req.body.name) group.name = req.body.name;
+				if (req.body.leaders) group.leaders = req.body.leaders;
+				if (req.body.members) group.members = req.body.members;
+				if (req.body.discussionTopics) group.discussionTopics = req.body.discussionTopics;
+
+				group.save(function(err){
+					if (err) res.send(err);
+					res.send('Group updated');
+				})
 			})
 		})
 		.delete(function(req,res){
 			Group.remove({
-				_id: req.params.groupParam
+				_id: req.params.group_id
 			}, 
 			function(err) {
 				if (err) res.send(err);
-				res.json({message: "group has been deleted"});
+				res.json({message: "Group has been deleted"});
 			});	
 		});
+
+	apiRouter.post('/getGroups', function(req,res){
+		Group.find({
+			_id: {$in: req.body.groups}
+		}, 
+		function(err, groups){
+			if (err){
+				res.send(err);
+			}
+			else{
+				res.json(groups);
+			}
+		});
+
+	})
+
 
 
 /*****************ADMIN ROUTING *************************/
