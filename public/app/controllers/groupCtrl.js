@@ -16,7 +16,9 @@ angular.module('groupCtrl', ['groupService', 'userService', 'authService'])
 			.success(function(data){
 				vm.user = data;
 				vm.loadUserGroups();
-				vm.loadLeaderGroups();
+				if (vm.user.leader.isLeader){
+					vm.loadLeaderGroups();
+				}
 			})
 	}
 	
@@ -88,12 +90,20 @@ angular.module('groupCtrl', ['groupService', 'userService', 'authService'])
 //db.groups.find({name:"Hector Group"}, {_id:1}).forEach(function(doc){db.users.update({username:"john"},{$push:{groups:doc._id}})})
 
 
-	vm.addMember = function(){
-		User.inviteUser(vm.memberName, {sentBy:vm.user.username, groupName: vm.currentGroup.name})
+	vm.inviteMember = function(){
+		User.inviteUser({to:vm.memberEmail, from:vm.user.username, groupName: vm.currentGroup.name, groupId: vm.currentGroup._id})
 			.success(function(data){
+				if (data.error){
+					vm.inviteClass = "alert alert-danger";
+					vm.inviteMessage = data.message;
+				}
+				else{
+					vm.inviteClass = "alert alert-info";
+					vm.inviteMessage = data.message;
+				}
 			})
 
-		vm.memberName = '';
+		vm.memberEmail = '';
 	}
 
 
@@ -141,5 +151,31 @@ angular.module('groupCtrl', ['groupService', 'userService', 'authService'])
 		vm.currentGroup = group;
 	}
 
+	vm.acceptInvite = function(invite){
+		User.deleteSenderInvite(invite.from)
+			.success(function(data){
+			})
+		Group.addGroupMember(vm.user.username, invite)
+			.success(function(data){
+				if (data.error){
+					vm.groupInviteClass = "alert alert-danger";
+				}
+				else{
+					vm.groupInviteClass = "alert alert-info";
+					var index = vm.user.groupInvites.indexOf(invite);
+					if (index > -1){
+						vm.user.groupInvites.splice(index);
+					}
+					vm.user.groups.push(invite.groupId);
+					User.update(vm.user._id, vm.user);
+					vm.loadUser();
+				}
+				vm.groupInviteMessage = data.message;
+			})
+	}
+
+	vm.declineInvite = function(invite){
+
+	}
 
 })

@@ -43,20 +43,41 @@ angular.module('userCtrl', ['userService'])
 	
 	var vm = this;
 
+	vm.validateEmail = function(email) {
+        var re = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i;
+        return re.test(email);
+    }
+
 	// variable to hide/show elements of the view
 	// differentiates between create or edit pages
 	vm.type = 'create';
 	// function to create a user
 	vm.saveUser = function() {
-		vm.processing = true;
-		vm.message = '';
-		// use the create function in the userService
-		User.create(vm.userData)
-			.success(function(data) {
-				vm.processing = false;
-				vm.userData = {};
-				vm.message = data.message;
-			});
+		if (!vm.validateEmail(vm.userData.email)){
+			vm.alertmsg = "alert alert-danger";
+			vm.message = "Please input a valid email address";
+		}
+		else if (vm.userData.password.length < 6){
+			vm.alertmsg = "alert alert-danger"
+			vm.message = "Please input a password with 6 or more characters";
+		}
+		else{
+			vm.processing = true;
+			vm.message = '';
+			// use the create function in the userService
+			User.create(vm.userData)
+				.success(function(data) {
+					vm.processing = false;
+					vm.userData = {};
+					if (data.error){
+						vm.alertmsg = "alert alert-danger"
+					}
+					else{
+						vm.alertmsg = "alert alert-info"
+					}
+					vm.message = data.message;
+				});
+		}
 	};	
 
 })

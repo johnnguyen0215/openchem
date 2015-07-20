@@ -145,14 +145,14 @@ module.exports = function(app, express) {
 				if (err) {
 					// duplicate entry
 					if (err.code == 11000){
-						return res.json({ success: false, message: 'A user with that username already exists. '});
+						return res.json({ error: true, message: 'A user with that username already exists. '});
 					}
 					else {
-						return res.send(err);
+						return res.json({ error: true, message: 'Validation failed'});
 					}
 				}
 				else{
-					res.json({ message: 'User created!' });
+					res.json({ error:false, message: 'User created!' });
 				}
 			});
 
@@ -235,6 +235,33 @@ module.exports = function(app, express) {
 	})
 
 
+	apiRouter.put('/invite', function(req,res){
+		User.findOneAndUpdate(
+			{email:req.body.to},
+			{$push: { groupInvites: req.body }}, 
+			function(err,user){
+				if (err){
+					res.send(err);
+				}
+				else if (!user){
+					res.json({error:true, message:"User with that email was not found"});
+				}
+				else{
+					res.json({error:false, message:"Successfully invited user"});
+				}
+			});
+	})
+
+	apiRouter.put('/deleteSenderInvite', function(req,res){
+		User.findOneAndUpdate(
+			{email:req.body.from},
+			{$pull:{"leader.invitesSent":req.body}},
+			function(err, user){
+				if (err) res.send(err);
+				res.json({message:"Successfully deleted from leader invites sent."});
+			});
+	})
+
 
 /***************** GROUP ROUTING *************************/
 
@@ -261,6 +288,13 @@ module.exports = function(app, express) {
 
 
 	apiRouter.route('/group/:group_id')
+		.get(function(req,res){
+			Group.findById(req.params.group_id, 
+				function(err, group){
+					if(err) res.send(err);
+					res.json(group);
+				})
+		})
 		.put(function(req, res){
 			Group.findById(req.params.group_id, function(err, group){
 				if (err) res.send(err);
@@ -303,6 +337,14 @@ module.exports = function(app, express) {
 
 	})
 
+	apiRouter.put('/addGroupMember:memberName', function(req,res){
+		Group.find({name:req.body.groupName},
+			{$push:{members:req.params.memberName}},
+			function(err, group){
+				if (err) res.send(err);
+				res.json({message:'Member added successfully'});
+			})
+	})
 
 
 /*****************ADMIN ROUTING *************************/

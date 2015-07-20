@@ -34,8 +34,12 @@ angular.module('userService', [])
 		return $http.delete('/api/deleteFromAllUsers/'+ groupId);
 	};
 
-	userFactory.inviteUser = function(userEmail, invite){
-		return $http.put('/api/inviteUser/'+userEmail, invite);
+	userFactory.inviteUser = function(invite){
+		return $http.put('/api/invite/', invite);
+	};
+
+	userFactory.deleteSenderInvite = function(invite){
+		return $http.put('/api/deleteSenderInvite/', invite);
 	}
 
 	// return our entire userFactory object

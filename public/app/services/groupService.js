@@ -17,13 +17,21 @@ angular.module('groupService', [])
  		return $http.delete('/api/group/'+groupId);
  	}
 
+ 	groupFactory.getGroup = function(groupId){
+ 		return $http.get('/api/group/'+groupId);
+ 	}
+
  	groupFactory.getGroups = function(groupsArray){
  		return $http.post('/api/getGroups', groupsArray);
  	}
 
  	
- 	groupFactory.all = function(){
+ 	groupFactory.allGroups = function(){
  		return $http.get('/api/group');
+ 	}
+
+ 	groupFactory.addGroupMember = function(memberName, invite){
+ 		return $http.put('/api/addGroupMember/'+memberName, invite);
  	}
 
 
