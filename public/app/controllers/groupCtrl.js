@@ -56,6 +56,7 @@ angular.module('groupCtrl', ['groupService', 'userService', 'authService'])
 		}
 		else{
 			vm.groupObj.leaders.push(vm.user.username);
+			vm.groupObj.members.push(vm.user.username);
 			Group.addGroup(vm.groupObj)
 				.success(function(data){
 					if (data.error){
@@ -65,7 +66,11 @@ angular.module('groupCtrl', ['groupService', 'userService', 'authService'])
 					else{
 						vm.alertmsg = "alert alert-info";
 						vm.message = data.message;
-						User.insertLeaderGroup({groupName: vm.groupObj.name, leaderId: vm.userId})
+						vm.user.groups.push(data.groupId);
+						vm.user.leader.groups.push(data.groupId);
+						vm.user.leader.groupsCreated += 1;
+
+						User.update(vm.user._id, vm.user)
 							.success(function(data){
 								vm.loadUser();
 							})
@@ -94,10 +99,7 @@ angular.module('groupCtrl', ['groupService', 'userService', 'authService'])
 
 	vm.updateGroup = function(groupData){
 		vm.processing = true;
-		User.updateUserGroups({group_id: groupData._id, groupName: groupData.name})
-			.success(function(data){
 
-			})
 		Group.updateGroup(groupData._id, groupData)
 			.success(function(data){
 				vm.editMessage = data.message;
@@ -108,12 +110,25 @@ angular.module('groupCtrl', ['groupService', 'userService', 'authService'])
 	
 	vm.deleteGroup = function(groupId){
 		vm.processing = true;
-		User.deleteFromUsers(groupId)
+
+		User.deleteFromAllUsers(groupId)
 			.success(function(data){
 			})
-		User.decrementGroupsCreated(vm.userId)
+
+		vm.user.leader.groupsCreated -= 1;
+		var leaderIndex = vm.user.leader.groups.indexOf(groupId);
+		if (leaderIndex > -1){
+			vm.user.leader.groups.splice(leaderIndex,1);
+		}
+		var groupIndex = vm.user.groups.indexOf(groupId);
+		if (groupIndex > -1){
+			vm.user.groups.splice(groupIndex,1);
+		}
+
+		User.update(vm.user._id, vm.user)
 			.success(function(data){
 			})
+
 		Group.deleteGroup(groupId)
 			.success(function(data){
 				vm.editMessage = data.message;

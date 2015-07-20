@@ -30,24 +30,8 @@ angular.module('userService', [])
 		return $http.delete('/api/users/' + id);
 	};
 
-	userFactory.inviteToGroup = function(email, groupName){
-		return $http.put('/api/users/invite/' + email, groupName);
-	};
-
-	userFactory.insertLeaderGroup = function(data){
-		return $http.put('/api/insertLeaderGroup', data);
-	};
-
-	userFactory.updateUserGroups = function(groupId){
-		return $http.put('/api/updateUserGroups', groupId);
-	};
-
-	userFactory.deleteFromUsers = function(groupId){
-		return $http.delete('/api/deleteFromUsers/'+ groupId);
-	};
-
-	userFactory.decrementGroupsCreated = function(leaderId){
-		return $http.delete('/api/decrementGroupsCreated/'+leaderId);
+	userFactory.deleteFromAllUsers = function(groupId){
+		return $http.delete('/api/deleteFromAllUsers/'+ groupId);
 	};
 
 	userFactory.inviteUser = function(userEmail, invite){

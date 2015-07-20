@@ -185,8 +185,9 @@ module.exports = function(app, express) {
 
 		// update the user with this id
 		.put(function(req, res) {
+			console.log(req.params.user_id);
 			User.findById(req.params.user_id, function(err, user) {
-
+				console.log(req.body);
 				if (err) res.send(err);
 
 				// set the new user information if it exists in the request
@@ -224,69 +225,12 @@ module.exports = function(app, express) {
 			});
 		});
 
-//	db.groups.find({name:"Hector Group"}, {_id:1}).forEach(function(doc){db.users.update({username:"john"},{$push:{groups:doc._id}})})
-
-	apiRouter.put('/insertLeaderGroup',function(req,res){
-		Group.find({name:req.body.groupName}, {_id:1}, function(err,doc){
-			if (err){
-				res.send(err);
-			}
-			else{
-				User.update({_id:req.body.leaderId},
-						{$push:{groups:doc[0]._id, 'leader.groups':doc[0]._id}, $inc:{'leader.groupsCreated':1}},
-						function(err){
-							if(err){
-								res.send(err);
-							}
-							else{
-								res.send("Leader Groups have been updated");
-							}
-						})
-			}
-		})
-	})
-
-	apiRouter.put('/updateUserGroups', function(req,res){
-		User.update(
-			{groups:req.body.group_id}, 
-			{$set:{"groups.$":req.body.newGroupName, "leader.groups.$":req.body.newGroupName}},
-			function(err){
-				if(err) res.send(err);
-				res.json({message: "Updated Group"});
-			});
-	}
-)
-	apiRouter.delete('/deleteFromUsers/:groupId', function(req,res){
+	apiRouter.delete('/deleteFromAllUsers/:groupId', function(req,res){
 		console.log(req.params.groupId);
 		User.update({}, {$pull:{'groups':mongoose.Types.ObjectId(req.params.groupId), 'leader.groups':mongoose.Types.ObjectId(req.params.groupId)}}, {multi:true}, 
 			function(err){
 				if (err) res.send(err);
 				res.json({message:'Successfully removed from groups'});
-			});
-	})
-
-	apiRouter.delete('/decrementGroupsCreated/:leaderId', function(req,res){
-		User.findByIdAndUpdate(req.params.leaderId, 
-			{$inc:{'leader.groupsCreated':-1}},
-			function(err){
-				if(err) res.send(err);
-				res.json({message:'successfully decremented'});
-			});
-	})
-
-
-	apiRouter.put('/invite/:email', function(req,res){
-		User.findOneAndUpdate(
-			{email:req.params.email}, 
-			{$push: { groupInvites: req.body  }}, 
-			function(err,user){
-				if (err){
-					res.send(err);
-					res.json({message:"invite sent"});
-				}
-				else{
-					res.json(user);
-				}
 			});
 	})
 
@@ -299,9 +243,8 @@ module.exports = function(app, express) {
 			var group = new Group();
 			group.name = req.body.name;
 			group.leaders = req.body.leaders;
-			group.save(function(err){
+			group.save(function(err, group){
 				if(err){
-					console.log(err);
 					if (err.code == 11000){
 						return res.json({ success: false, error: 'A group with that name already exists. '});
 					}
@@ -310,7 +253,7 @@ module.exports = function(app, express) {
 					}
 				}
 				else{
-					res.json({message: "Successfully added Group"});
+					res.json({groupId:group._id, message: "Successfully added Group"});
 				}
 
 			})
