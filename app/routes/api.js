@@ -255,7 +255,7 @@ module.exports = function(app, express) {
 	apiRouter.put('/deleteSenderInvite', function(req,res){
 		User.findOneAndUpdate(
 			{email:req.body.from},
-			{$pull:{"leader.invitesSent":req.body}},
+			{$pull:{"leader.invitesSent":{to:req.body.to}}},
 			function(err, user){
 				if (err) res.send(err);
 				res.json({message:"Successfully deleted from leader invites sent."});

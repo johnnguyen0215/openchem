@@ -22,6 +22,7 @@ angular.module('groupCtrl', ['groupService', 'userService', 'authService'])
 			})
 	}
 	
+	// loads the groups in the user's groups array
 	vm.loadUserGroups = function(){
 		Group.getGroups({groups: vm.user.groups})
 			.success(function(data){
@@ -32,7 +33,7 @@ angular.module('groupCtrl', ['groupService', 'userService', 'authService'])
 			})
 	}
 	
-	
+	//loads the groups in the user's leader group array
 	vm.loadLeaderGroups = function(){
 		Group.getGroups({groups: vm.user.leader.groups})
 			.success(function(data){
@@ -40,6 +41,7 @@ angular.module('groupCtrl', ['groupService', 'userService', 'authService'])
 			})
 	}
 
+	// template group object to be filled out in the dom
 	vm.groupObj = {
 		name: "",
 		leaders: [],
@@ -48,9 +50,9 @@ angular.module('groupCtrl', ['groupService', 'userService', 'authService'])
 	}
 
 
+	// adds a group
 	vm.addGroup = function(){
 		vm.message = '';
-		// input the group object
 
 		if (vm.user.leader.groupsCreated >= 5){
 			vm.alertmsg = "alert alert-danger";
@@ -87,11 +89,11 @@ angular.module('groupCtrl', ['groupService', 'userService', 'authService'])
 		}
 	}
 
-//db.groups.find({name:"Hector Group"}, {_id:1}).forEach(function(doc){db.users.update({username:"john"},{$push:{groups:doc._id}})})
-
-
+	// invites a member to specific group chosen through the dom
 	vm.inviteMember = function(){
-		User.inviteUser({to:vm.memberEmail, from:vm.user.username, groupName: vm.currentGroup.name, groupId: vm.currentGroup._id})
+		var invite = {to:vm.memberEmail, from:vm.user.email, groupName: vm.currentGroup.name, groupId: vm.currentGroup._id}
+		alert(invite.to);
+		User.inviteUser(invite)
 			.success(function(data){
 				if (data.error){
 					vm.inviteClass = "alert alert-danger";
@@ -100,13 +102,15 @@ angular.module('groupCtrl', ['groupService', 'userService', 'authService'])
 				else{
 					vm.inviteClass = "alert alert-info";
 					vm.inviteMessage = data.message;
+					vm.user.leader.invitesSent.push(invite)
+					User.update(vm.user._id, vm.user);
+					vm.loadUser();
 				}
 			})
-
 		vm.memberEmail = '';
 	}
 
-
+	// updates the group fields in the edit panel
 	vm.updateGroup = function(groupData){
 		vm.processing = true;
 
@@ -118,6 +122,7 @@ angular.module('groupCtrl', ['groupService', 'userService', 'authService'])
 			})
 	}
 	
+	// Deletes a group in the edit panel
 	vm.deleteGroup = function(groupId){
 		vm.processing = true;
 
@@ -147,16 +152,22 @@ angular.module('groupCtrl', ['groupService', 'userService', 'authService'])
 			});
 	}
 
+	// Changes the current group viewed under the 'Your Groups' section
 	vm.changeGroup = function(group){
 		vm.currentGroup = group;
 	}
 
+	// Accept an invite in the group invites section
+	// First deletes from the sender's pending invites
+	// Then deletes from the user's group invites
+	// Then pushes the user into the specified group's member array
 	vm.acceptInvite = function(invite){
-		User.deleteSenderInvite(invite.from)
+		User.deleteSenderInvite(invite)
 			.success(function(data){
 			})
 		Group.addGroupMember(vm.user.username, invite)
 			.success(function(data){
+				alert("successfully added group member");
 				if (data.error){
 					vm.groupInviteClass = "alert alert-danger";
 				}
@@ -174,6 +185,9 @@ angular.module('groupCtrl', ['groupService', 'userService', 'authService'])
 			})
 	}
 
+	// Decline an invite in the group invites section
+	// First deletes from the sender's pending invites
+	// Then deletes from the user's group invites
 	vm.declineInvite = function(invite){
 
 	}
