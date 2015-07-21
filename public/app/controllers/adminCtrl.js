@@ -128,11 +128,11 @@ angular.module('adminCtrl', ['adminService', 'authService'])
 			vm.problemsMsg = "Please input a value in both fields.";
 		}
 		else{
-			if (vm.isPdf(vm.chemTextObj.url)){
-				vm.chemTextObj.type = "pdf";
+			if (vm.isPdf(vm.practiceProbObj.url)){
+				vm.practiceProbObj.type = "pdf";
 			}
 			else {
-				vm.chemTextObj.type = "link";
+				vm.practiceProbObj.type = "link";
 			}
 			vm.topicData.practiceProblems.push(vm.practiceProbObj);
 			vm.practiceProbObj = {};

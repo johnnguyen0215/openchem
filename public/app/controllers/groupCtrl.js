@@ -92,7 +92,6 @@ angular.module('groupCtrl', ['groupService', 'userService', 'authService'])
 	// invites a member to specific group chosen through the dom
 	vm.inviteMember = function(){
 		var invite = {to:vm.memberEmail, from:vm.user.email, groupName: vm.currentGroup.name, groupId: vm.currentGroup._id}
-		alert(invite.to);
 		User.inviteUser(invite)
 			.success(function(data){
 				if (data.error){
